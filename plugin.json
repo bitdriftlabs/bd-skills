@@ -1,0 +1,23 @@
+{
+  "name": "bd-skills",
+  "description": "Agent skills for the bitdrift Capture mobile observability platform",
+  "version": "0.1.0",
+  "author": {
+    "name": "bitdrift"
+  },
+  "homepage": "https://github.com/bitdriftlabs/bd-skills",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "copilot",
+    "observability",
+    "mobile"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "skills",
+    "plugin"
+  ],
+  "skills": "skills/"
+}

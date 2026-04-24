@@ -1,2 +1,44 @@
-# bd-skills
-AI skills for bitdrift
+# bitdrift Agent Skills
+
+Agent skills for [bitdrift](https://bitdrift.ai) — mobile observability that stores telemetry on-device and uploads only what you need.
+
+- **bd-cli** — CLI usage: workflows, charts, sessions, issues, admin, debug symbols
+- **bd-docs** — Fetch and search bitdrift documentation
+
+## Installation
+
+Use your preferred skills distribution channel to install these skills.
+
+## npx skills
+
+```bash
+npx skills add bitdriftlabs/bd-skills -s '*'
+```
+
+Reference: [skills.sh](https://skills.sh/)
+
+## GitHub Copilot
+
+```bash
+copilot plugin install bitdriftlabs/bd-skills
+```
+
+Reference: [Install plugins in Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-finding-installing)
+
+## Claude Code
+
+```text
+/plugin marketplace add bitdriftlabs/bd-skills
+/plugin install bd@bd-skills
+```
+
+References: [Claude Code plugin docs](https://code.claude.com/docs/en/discover-plugins) · [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)
+
+## CLI install and authentication
+
+The skills themselves are markdown files. To use the bitdrift platform from an agent, you will also
+need the `bd` CLI and authentication.
+
+## License
+
+See [LICENSE](LICENSE) for details.
