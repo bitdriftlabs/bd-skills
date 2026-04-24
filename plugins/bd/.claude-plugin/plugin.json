@@ -1,0 +1,8 @@
+{
+  "name": "bd",
+  "description": "SDK instrumentation and platform operations for bitdrift Capture",
+  "version": "0.1.0",
+  "author": { "name": "bitdrift" },
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0"
+}

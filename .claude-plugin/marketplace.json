@@ -1,0 +1,15 @@
+{
+  "name": "bd-skills",
+  "owner": { "name": "bitdrift" },
+  "metadata": {
+    "description": "Agent skills for the bitdrift Capture mobile observability platform"
+  },
+  "plugins": [
+    {
+      "name": "bd",
+      "source": "./plugins/bd",
+      "description": "SDK instrumentation and platform operations for bitdrift Capture",
+      "version": "0.1.0"
+    }
+  ]
+}
