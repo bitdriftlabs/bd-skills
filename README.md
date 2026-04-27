@@ -12,7 +12,7 @@ Use your preferred skills distribution channel to install these skills.
 ## npx skills
 
 ```bash
-npx skills add bitdriftlabs/bd-skills -s '*'
+npx skills add bitdriftlabs/bd-skills
 ```
 
 Reference: [skills.sh](https://skills.sh/)
@@ -35,10 +35,12 @@ Reference: [Install plugins in Copilot CLI](https://docs.github.com/en/copilot/h
 
 References: [Claude Code plugin docs](https://code.claude.com/docs/en/discover-plugins) · [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)
 
-## CLI install and authentication
+## Dependencies
 
 The skills themselves are markdown files. To use the bitdrift platform from an agent, you will also
-need the `bd` CLI and authentication.
+need the [`bd` CLI](https://docs.bitdrift.io/cli/quickstart.html).
+
+To get started using the bitdrift platform, sign up [here](https://bitdrift.io/signup).
 
 ## License
 

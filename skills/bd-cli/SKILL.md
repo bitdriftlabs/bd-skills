@@ -1,6 +1,6 @@
 ---
 name: bd-cli
-description: "Guide for operating the bitdrift bd CLI and analyzing live bitdrift account data — workflows, charts, sessions, issues, keys, connectors, and app health investigations. Trigger when the user wants to run bd commands, inspect live platform data, debug an app with bitdrift, create or edit workflows, read charts or metrics, triage crashes, inspect session timelines, or automate bitdrift operations from the CLI.
+description: "Guide for operating the bitdrift bd CLI and analyzing live bitdrift account data — workflows, charts, sessions, issues, keys, connectors, and app health investigations. Trigger when the user wants to run bd commands, inspect live platform data, debug an app with bitdrift, create or edit workflows, read charts or metrics, triage crashes, inspect session timelines, or automate bitdrift operations from the CLI."
 license: PolyForm Shield License 1.0.0
 ---
 
