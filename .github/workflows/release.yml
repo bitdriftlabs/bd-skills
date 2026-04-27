@@ -1,0 +1,41 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version in semver form, without a leading v
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require main branch
+        run: |
+          test "${GITHUB_REF_NAME}" = "main"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Verify release version manifests
+        run: |
+          python3 scripts/release_versions.py "${{ inputs.version }}" --check
+
+      - name: Publish skills release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh skill publish --tag "v${{ inputs.version }}"

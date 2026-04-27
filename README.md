@@ -2,7 +2,7 @@
 
 Agent skills for [bitdrift](https://bitdrift.ai) — mobile observability that stores telemetry on-device and uploads only what you need.
 
-- **bd-cli** — CLI usage: workflows, charts, sessions, issues, admin, debug symbols
+- **bd-cli** — CLI usage: workflows, charts, sessions, issues, admin
 - **bd-docs** — Fetch and search bitdrift documentation
 
 ## Installation
@@ -20,7 +20,8 @@ Reference: [skills.sh](https://skills.sh/)
 ## GitHub Copilot
 
 ```bash
-copilot plugin install bitdriftlabs/bd-skills
+copilot plugin marketplace add bitdriftlabs/bd-skills
+copilot plugin install bd@bd-skills
 ```
 
 Reference: [Install plugins in Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/plugins-finding-installing)
