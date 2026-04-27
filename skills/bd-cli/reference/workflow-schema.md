@@ -101,7 +101,7 @@ Attach to any step except step 0 (exit conditions on step 0 are not allowed). Fi
 
 ## Actions
 
-Every action has a `rule_id` and exactly one action type. Use `bd schema workflow.create Action
+Every action has a `rule_id` and exactly one action type. Use `bd schema workflow.create ActionRule
 --depth 2` for the full action shape.
 
 ### Session Capture (`flush_rule`)

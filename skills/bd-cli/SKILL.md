@@ -1,6 +1,7 @@
 ---
 name: bd-cli
-description: "Guide for using the bitdrift bd CLI — investigating app health, authoring workflows, reading charts/sessions/issues. Trigger when the user mentions bd, bitdrift, app health investigation, workflow creation, or any bitdrift CLI operation. Use for help debugging apps."
+description: "Guide for operating the bitdrift bd CLI and analyzing live bitdrift account data — workflows, charts, sessions, issues, keys, connectors, and app health investigations. Trigger when the user wants to run bd commands, inspect live platform data, debug an app with bitdrift, create or edit workflows, read charts or metrics, triage crashes, inspect session timelines, or automate bitdrift operations from the CLI.
+license: PolyForm Shield License 1.0.0
 ---
 
 # bd CLI
@@ -13,6 +14,8 @@ The developer needs:
 
 1. The `bd` CLI: `brew tap bitdriftlabs/bd && brew install bd` if not installed - offer to call this for the user.
 2. Authentication: See Authentication section below.
+
+This skill was tested against `bd` **0.2.4**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
 
 Direct the user to sign up at https://bitdrift.io/signup if new.
 
@@ -63,7 +66,7 @@ This shows the field key, type, description, platform, and unit for that event.
 4. **Understanding a specific enum value** — run `bd schema <group>.<command> EnumType.VALUE` to
    inspect the fields and metadata attached to that value.
 
-For product-level context — conceptual guides, feature overviews, SDK setup — use the `$bd-docs` skill, which searches docs.bitdrift.io directly. For API-level field names and types, prefer `bd schema`.
+For product-level context — conceptual guides, feature overviews, SDK setup — use the `$bd-docs` skill, which searches docs.bitdrift.io directly. Use `bd-docs` when the question is about *how bitdrift works* or *how to configure something*; use this skill when the question requires *live account data* or *CLI operations*. For API-level field names and types, prefer `bd schema`.
 
 ## Domain routing
 
@@ -303,7 +306,7 @@ curl -X POST https://api-public.bitdrift.io/bitdrift.public.unary.workflows.v1.W
   -d '{}'
 ```
 
-URL pattern: `https://api-public.bitdrift.io/<fully.qualified.ServiceName>/<MethodName>.md`. See https://docs.bitdrift.io/api/services.md for all services and methods.
+URL pattern: `https://api-public.bitdrift.io/<fully.qualified.ServiceName>/<MethodName>`. See https://docs.bitdrift.io/api/services for all services and methods.
 
 This should be a last resort when the CLI API surface is insufficient.
 
