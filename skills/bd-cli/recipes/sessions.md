@@ -50,7 +50,7 @@ Prefer this order:
 1. **Use the source context first** — issue reason, workflow trigger, captured-session `.fields`, or
    the symptom the user described
 2. **If you already know the event family, start with `timeline search`** — use the narrowest
-   reliable filter you already have (`--message`, `--log-level`, `--field`)
+   reliable filter you already have (`--message`, `--log-type`, `--log-level`, `--field`)
 3. **If you do not have a hypothesis, inventory the session** — summarize messages or log types to
    see what families of logs are present
 4. **Then drill in** — inspect the relevant schema and refine with `--field` or `--request-file`
@@ -68,12 +68,29 @@ bd timeline logs <session_id> -o json --jq '[.logs[].log_type] | group_by(.) | m
 This is usually enough to decide whether to focus on network, lifecycle, resource, replay, or
 app-defined logs before writing narrower filters.
 
+### `RESOURCE` logs
+
+Use `--log-type resource` when you want per-session resource telemetry.
+
+Typical fields include battery state/level, low-power mode, memory pressure, JVM/native memory
+usage, and per-minute request/response byte counters.
+
+```bash
+# Show only resource telemetry for the session.
+bd timeline search <session_id> --log-type resource
+
+# See the documented RESOURCE field list and meanings.
+bd schema workflow.create GenericOotbConditionType.RESOURCE --docs
+```
+
 ---
 
 ## Reading Efficiently
 
 Output caps (`--max-results`, `--max-logs`) return a bounded slice, not the full session. For
 repeated analysis, save to a file first; check `.total_pages` to know if you truncated.
+
+Use `--field key=value` for exact field matches and `--query` for broader contains-style search.
 
 For OR across message families, run separate searches before reaching for `--request-file`.
 
