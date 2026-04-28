@@ -1,7 +1,7 @@
 # Session-Level Attributes (available on every event)
 
 These fields are automatically attached to every log event on both platforms. Match using
-`bd timeline search --field key=value` (maps to `$.fields.<key>`), or `--request-file` for custom
+`bd timeline search --field key=value` (maps to `$.<key>`), or `--request-file` for custom
 paths or operators.
 
 | Field key | Platform | Description |

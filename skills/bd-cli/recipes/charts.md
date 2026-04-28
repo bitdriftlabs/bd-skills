@@ -213,8 +213,6 @@ bd workflow charts <id> -o json \
 Data is in `.funnel_data.steps[]` — each step has `id` (matches `match_id`) and `value` (session
 count reaching that step). Compare consecutive `value` fields to find drop-off points.
 
-**Note:** Funnel charts are web UI–only — `bd workflow charts` returns "chart type not supported". Use `bd workflow open <id>` to view in the web UI.
-
 ---
 
 ## Interpreting Chart Data
