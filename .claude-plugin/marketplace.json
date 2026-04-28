@@ -7,9 +7,8 @@
   "plugins": [
     {
       "name": "bd",
-      "source": "./plugins/bd",
       "description": "SDK instrumentation and platform operations for bitdrift Capture",
-      "version": "0.1.0"
+      "source": "./"
     }
   ]
 }
