@@ -32,10 +32,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def discover_manifest_paths(repo_root: Path) -> list[Path]:
-    path = repo_root / "plugin.json"
-    if not path.exists():
+    paths = [
+        path
+        for path in (
+            repo_root / "plugin.json",
+            repo_root / ".claude-plugin" / "plugin.json",
+        )
+        if path.exists()
+    ]
+    if not paths:
         raise SystemExit("No managed version manifest was found.")
-    return [path]
+    return paths
 
 
 def load_json(path: Path) -> dict:
