@@ -15,7 +15,7 @@ SEMVER_RE = re.compile(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Update and validate release version manifests."
+        description="Update and validate the published plugin release version."
     )
     parser.add_argument("version", help="Release version without a leading 'v'")
     parser.add_argument(
@@ -32,13 +32,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def discover_manifest_paths(repo_root: Path) -> list[Path]:
-    paths = [repo_root / "plugin.json", repo_root / ".claude-plugin" / "marketplace.json"]
-    paths.extend(repo_root.glob("plugins/**/.claude-plugin/plugin.json"))
-
-    existing = [path for path in paths if path.exists()]
-    if not existing:
-        raise SystemExit("No managed version manifests were found.")
-    return sorted(existing)
+    path = repo_root / "plugin.json"
+    if not path.exists():
+        raise SystemExit("No managed version manifest was found.")
+    return [path]
 
 
 def load_json(path: Path) -> dict:
@@ -64,31 +61,6 @@ def update_manifest(path: Path, version: str, check_only: bool) -> tuple[bool, s
             data["version"] = version
             dump_json(path, data)
         return changed, str(current_version)
-
-    if path.name == "marketplace.json":
-        plugins = data.get("plugins")
-        if not isinstance(plugins, list) or not plugins:
-            raise SystemExit(f"{relative_path} is missing a non-empty plugins array.")
-
-        current_versions = []
-        changed = False
-        for plugin in plugins:
-            current_version = plugin.get("version")
-            if current_version is None:
-                raise SystemExit(
-                    f"{relative_path} has a plugin entry without a version field."
-                )
-            current_versions.append(str(current_version))
-            if current_version != version:
-                changed = True
-                if not check_only:
-                    plugin["version"] = version
-
-        if not check_only and changed:
-            dump_json(path, data)
-
-        distinct_versions = sorted(set(current_versions))
-        return changed, ", ".join(distinct_versions)
 
     raise SystemExit(f"Unsupported manifest type: {relative_path}")
 
