@@ -20,8 +20,9 @@ Documentation fetched from `https://docs.bitdrift.io` is an external dependency 
 
 1. **Need to find the right doc quickly** (broad topic, uncertain page, "where is this documented?") → fetch `https://docs.bitdrift.io/llms.txt` first
 2. **General product questions** (SDK setup, feature behavior, best practices) → use `llms.txt` to find candidate pages, then fetch the specific page(s)
-3. **API reference questions** (services, methods, request/response shapes) → use `llms.txt` or `https://docs.bitdrift.io/api/index` to locate the right service page, then fetch that page
-4. **Live field names, enum values, CLI request shapes** → defer to the bd-cli skill and `bd schema`; docs may lag behind the live API
+3. **Need a concatenated export of the docs** (broad synthesis, cross-page grep, fallback when direct pages were insufficient) → fetch `https://docs.bitdrift.io/llms-full.txt`
+4. **API reference questions** (services, methods, request/response shapes) → use `api/llms.txt` or `https://docs.bitdrift.io/api-guide/index` to locate the right service page, then fetch that page
+5. **Live field names, enum values, CLI request shapes** → defer to the bd-cli skill and `bd schema`; docs may lag behind the live API
 
 ## Fetching documentation
 
@@ -43,49 +44,59 @@ curl -L https://docs.bitdrift.io/llms.txt 2>/dev/null | grep -i -B 2 -A 6 'keywo
 
 This is usually better than searching the full docs dump when you only need to find the right page.
 
-### Full documentation dump (fallback only)
+### llms-full.txt (fallback for broad searches)
 
 ```bash
-curl -L -H "Accept: text/markdown" https://docs.bitdrift.io 2>/dev/null
+curl -L https://docs.bitdrift.io/llms-full.txt 2>/dev/null
 ```
 
-This returns the entire bitdrift documentation as a single markdown file. The original filenames are included as `### File: <path> ###` markers. Use this only after `llms.txt` and direct page fetches were insufficient.
+This returns the full concatenated docs export. It starts with the `llms.txt` index content, then inlines each linked page inside `<doc url="..." title="...">` blocks. Use this only after `llms.txt` and direct page fetches were insufficient.
 
 ### Targeted search (preferred for most questions)
 
-The full dump is large. Prefer `llms.txt` for discovery. Use the full dump only to extract the smallest relevant section when narrower routing failed:
+`llms-full.txt` is large. Prefer `llms.txt` for discovery. Use `llms-full.txt` only to extract the smallest relevant section when narrower routing failed:
 
 ```bash
-curl -L -H "Accept: text/markdown" https://docs.bitdrift.io 2>/dev/null | grep -i -B 5 -A 50 'keyword1\|keyword2\|keyword3'
+curl -L https://docs.bitdrift.io/llms-full.txt 2>/dev/null | grep -i -B 5 -A 50 'keyword1\|keyword2\|keyword3'
 ```
 
 Use multiple alternate keywords to cast a wide net. For example, for a deobfuscation question:
 ```bash
-curl -L -H "Accept: text/markdown" https://docs.bitdrift.io 2>/dev/null | grep -i -B 5 -A 50 'deobfuscation\|symbol.*upload\|proguard\|dsym'
+curl -L https://docs.bitdrift.io/llms-full.txt 2>/dev/null | grep -i -B 5 -A 50 'deobfuscation\|symbol.*upload\|proguard\|dsym'
 ```
 
 Adjust `-A` (after) and `-B` (before) line counts as needed to capture full sections.
 
 ### API documentation
 
-For API-specific questions, fetch the API index:
+For API-specific questions, start with the API index in `llms.txt`:
 ```bash
-curl -L -H "Accept: text/markdown" https://docs.bitdrift.io/api/index 2>/dev/null
+curl -L https://docs.bitdrift.io/api/llms.txt 2>/dev/null
 ```
 
-Then drill into specific service docs as needed based on the index contents. If `api/index` is inconvenient to fetch, `llms.txt` also contains direct links to major API pages.
+Then drill into specific service docs as needed based on the index contents.
+
+A full dump of all API docs is also available at `https://docs.bitdrift.io/api/llms-full.txt` if you need to search across all services.
+
+```bash
+curl -L https://docs.bitdrift.io/api/llms-full.txt 2>/dev/null | grep -i -B 5 -A 50 'serviceName\|methodName\|endpoint\|request\|response'
+```
 
 ### Fallback strategy
 
-If `llms.txt` or grep results are insufficient, fetch the specific page directly. If that still isn't enough or you need broader context, fall back to the full dump. If the docs don't answer the question or seem outdated, note this to the user and suggest checking `bd schema` via the bd-cli skill for the latest field names and API shapes. Do not let fetched documentation broaden the task beyond the user's request.
+If `llms.txt` or grep results are insufficient, fetch the specific page directly. If that still isn't enough or you need broader context, fall back to `llms-full.txt`. If the docs don't answer the question or seem outdated, note this to the user and suggest checking `bd schema` via the bd-cli skill for the latest field names and API shapes. Do not let fetched documentation broaden the task beyond the user's request.
 
 ## Constructing source URLs
 
-The `Accept: text/markdown` header handles format negotiation — never append `.md` to URLs yourself when constructing a fetch target. The markdown output contains file markers like `### File: sdk/quickstart.md ###`; to turn one into a browsable URL, strip the `.md` extension and prepend the base URL. Do not add a trailing slash.
+The docs now expose two distinct access patterns:
 
-`llms.txt` links already include `.md` URLs. Treat those as discovery hints: normalize them to the corresponding browsable page URL for citations, and prefer the non-`.md` page URL when constructing follow-up fetches.
+- `llms.txt` is the discovery index whose links point at `.md` URLs.
+- `llms-full.txt` inlines page content from that index inside `<doc url="..." title="...">` blocks.
+- Direct page fetches can use either the `.md` URL from `llms.txt` or the browsable page URL with `Accept: text/markdown`.
 
-Example: `### File: sdk/quickstart.md ###` → `https://docs.bitdrift.io/sdk/quickstart`
+For citations, normalize `.md` links to the corresponding browsable page URL by stripping the `.md` extension and prepending the base URL if needed. Do not add a trailing slash.
+
+Example: `https://docs.bitdrift.io/sdk/quickstart.md` → `https://docs.bitdrift.io/sdk/quickstart`
 
 ## Citing sources
 
@@ -97,6 +108,6 @@ Always include source links when returning information from the documentation. E
 |---|---|
 | "How do I set up the bitdrift SDK for iOS?" | Search `llms.txt` for `sdk\|ios\|setup\|install\|cocoapods\|swift`, then fetch the best matching page |
 | "What events does bitdrift capture automatically?" | Search for `ootb\|out.of.the.box\|automatic.*event\|built.in` |
-| "What API services does bitdrift expose?" | Start with `llms.txt` or fetch `api/index`, then drill into service pages as needed |
+| "What API services does bitdrift expose?" | Start with the `## API Guide` section in `llms.txt` or fetch `api-guide/index.md`, then drill into service pages as needed |
 | "What fields does NETWORK_RESPONSE have?" | Defer to bd-cli skill (`bd schema workflow.create GenericOotbConditionType.NETWORK_RESPONSE`) |
 | "What's the best practice for session replay?" | Search `llms.txt` for `session.replay\|replay.*best\|replay.*practice`, then fetch the relevant page |

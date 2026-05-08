@@ -15,6 +15,8 @@ to understand real user impact, inspect a concrete session, or confirm a suspect
 
 - Prefer **existing evidence** first: Instant Insights, issue groups, existing captured sessions,
   and already-deployed workflows.
+- When looking for an applicable existing workflow, use the workflow description in metadata to
+  identify what the workflow is intended to detect, measure, or capture and why it was created.
 - Only deploy a new `flush_rule` workflow if existing data cannot answer the question.
 - Before deploying live capture, confirm the target behavior is still occurring in the current
   window. Live capture only observes **new** sessions after deployment.
@@ -44,6 +46,12 @@ purposes:
 - `--metadata-file` sets workflow metadata such as description and per-rule panel titles
 - `--chart-metadata-file` sets per-series chart metadata such as legend labels
 
+When creating a workflow, set the workflow description in metadata (typically via
+`--metadata-file`). Use it to explain the workflow's purpose: what it is trying to measure,
+detect, or capture, and, critically, why this workflow is being created at all (for example,
+to investigate a suspected regression, monitor adoption, or validate a hypothesis). Focus on capturing
+the intent over describing what the workflow does as this can be inferred from the configuration.
+
 ## Updating a Workflow
 
 Use `bd workflow update --help` for the accepted flags and `bd schema workflow.update` for the file
@@ -51,6 +59,10 @@ inputs.
 
 The durable workflow-level rule is: **stop deployed workflows before editing workflow logic.**
 Metadata and chart metadata can be updated independently of the workflow graph.
+
+When updating a workflow, also update the description in metadata if the workflow's purpose, scope,
+or reason for existing has changed. Keep the description aligned with both what the workflow does
+and, if relevant, why the team is running it.
 
 ## Using `describe` as a Template
 

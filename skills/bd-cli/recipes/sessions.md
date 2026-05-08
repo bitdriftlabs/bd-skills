@@ -26,6 +26,9 @@ Use:
 - `bd timeline logs <session_id>` for full-session inspection and inventory
 
 Both commands handle hydration for you before reading the timeline.
+That is convenient for one session, but when you have many candidate sessions it can serialize the
+wait. Use `bd timeline hydrate <session_id> --no-wait` to trigger hydration first across the whole
+set, then come back with `timeline search` or `timeline logs` once sessions are ready.
 
 Use schema for the live shape (`bd schema timeline.search --docs`, `bd schema timeline.logs --docs`,
 `bd schema timeline.hydrate --docs`).
@@ -37,6 +40,24 @@ Use schema for the live shape (`bd schema timeline.search --docs`, `bd schema ti
 - `FAILED` — unavailable; skip this session
 - `NOT_FOUND` from timeline/hydration calls usually means the session ID is wrong or no hydration
   record exists yet
+
+### Batch hydration without waiting
+
+`bd timeline hydrate <session_id>` normally polls until hydration finishes. Add `--no-wait` when
+you want to start hydration and return the current hydration state immediately.
+
+This is useful when triaging many sessions: trigger hydration for all interesting session IDs first,
+then read the ones that come back `HYDRATED` instead of blocking on each session one at a time.
+
+```bash
+# Trigger hydration for many sessions without waiting on each one.
+while read -r session_id; do
+  bd timeline hydrate --no-wait "$session_id" -o json --jq '.hydration_status' -r 2>/dev/null
+done < session_ids.txt
+```
+
+If you want actual parallel request fan-out as well as non-blocking waits, use your shell tooling
+(`xargs -P`, GNU parallel, etc.) around the same `--no-wait` pattern.
 
 ---
 
