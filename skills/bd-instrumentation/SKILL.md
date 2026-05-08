@@ -5,13 +5,15 @@ description: "Mobile app instrumentation and Capture SDK setup for bitdrift in i
 
 # bitdrift Instrumentation
 
-> For setup, troubleshooting, or to find the right skill, see $bd.
-
 Guides integration of the bitdrift Capture SDK into mobile apps. The SDK logs everything locally on-device; the bitdrift control plane dynamically decides what to upload.
 
 ## How this skill uses docs
 
 Use $bd-docs to fetch live API details from docs.bitdrift.io at each step. The platform reference files indicate what to look up — $bd-docs handles the mechanics of discovery and fetching.
+
+## Workflow summary
+
+Detect platform → Check if SDK is installed → Read platform reference → If new install: add dependency + `Logger.start()` → Add instrumentation categories the user needs.
 
 ## Step 1 — Detect platform
 
@@ -23,7 +25,7 @@ Identify the target platform from the user's project:
 | `.xcodeproj`, `.xcworkspace`, `Package.swift`, `Podfile`, `.swift`, `.m`/`.h` | **iOS** |
 | `package.json` with `react-native`, `metro.config.js`, `App.tsx`/`App.js` | **React Native** |
 
-If ambiguous (e.g., monorepo with both native and RN code), ask the user which target to instrument.
+If the project contains files for multiple platforms (e.g., both Android and React Native in a monorepo), ask the user which target to instrument.
 
 ## Step 2 — Determine SDK status
 
