@@ -3,6 +3,7 @@
 Agent skills for [bitdrift](https://bitdrift.ai) — mobile observability that stores telemetry on-device and uploads only what you need.
 
 - **bd-cli** — CLI usage: workflows, charts, sessions, issues, admin
+- **bd-instrumentation** - Installing and configuring the SDK to instrument iOS, Android, or React Native apps
 - **bd-docs** — Fetch and search bitdrift documentation
 
 ## Installation
