@@ -10,13 +10,17 @@ Agent skills for [bitdrift](https://bitdrift.ai) — mobile observability that s
 
 Use your preferred skills distribution channel to install these skills.
 
-## npx skills
+## Install using npx [skills cli](https://skills.sh/)
 
 ```bash
 npx skills add bitdriftlabs/bd-skills
 ```
 
-Reference: [skills.sh](https://skills.sh/)
+### Updating skills
+
+```bash
+npx skills update --all
+```
 
 ## GitHub Copilot
 
