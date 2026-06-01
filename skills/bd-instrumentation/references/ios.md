@@ -102,6 +102,15 @@ Add the SDK import and call `Logger.start()` at app launch. Start with a **fixed
 
 **$bd-docs:** look up `Logger.start session strategy configuration`
 
+**SDK API Key Management:**
+**IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control, such as CI/CD-injected build settings, non-committed `.xcconfig` files, or generated source files created at build time.
+
+If no pattern is found, consider defining the key in a non-committed `.xcconfig` file and exposing it to the app through a build-time generated Swift file or build setting.
+
+Avoid storing the SDK API Key in `Info.plist` unless your project already uses it as its standard configuration mechanism. Values in `Info.plist` are one of the easiest things to inspect in the app bundle.
+
+These approaches are meant to reduce accidental exposure in source control, but they do not make the key secret at runtime. 
+
 **Placement** — based on the UI framework detected in Phase 1:
 
 - **SwiftUI** (`@main App` struct detected): Call in `init()`

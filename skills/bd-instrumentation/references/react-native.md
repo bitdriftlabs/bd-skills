@@ -32,6 +32,9 @@ Call `init()` as early as possible. Start with a **fixed session strategy** — 
 
 **$bd-docs:** look up `session strategy configuration init`
 
+**SDK API Key Management:**
+**IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control (usually via ENV variables or compile-time configuration files.)
+
 **Placement tips:**
 - Call `init()` in `App.tsx` or `index.js`, before the app renders
 - `import { init, SessionStrategy } from '@bitdrift/react-native'`
