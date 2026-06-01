@@ -132,11 +132,16 @@ Add the SDK import and call `Logger.start()` at app launch. Start with a **fixed
 
 **$bd-docs:** look up `Logger.start session strategy configuration`
 
+**SDK API Key Management:**
+**IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control (usually via ENV variables or compile-time configuration files.)
+
+If no pattern is found but gradle is being used consider storing the key in a property BD_API_KEY in local.properties and then populating it via gradle `buildConfigField`. This will populate the `BuildConfig.BD_API_KEY` constant in the code. Alternatively consider using the [com.google.android.libraries.mapsplatform.secrets-gradle-plugin](https://github.com/google/secrets-gradle-plugin).
+
 **Placement tips:**
 - Call `Logger.start()` in `Application.onCreate()` — before any other initialization
 - If using Jetpack Startup, add `ContextHolder` as a dependency in your `Initializer`
 - If disabling auto-init, call `AppInitializer.getInstance(applicationContext).initializeComponent(ContextHolder::class.java)` before `Logger.start()`
-- Start with `SessionStrategy.Fixed` for easy verification (new session per launch)
+- Start with `SessionStrategy.Fixed()` for easy verification (new session per launch)
 
 **Verify:** Ask the user to build and run the app on an emulator or device, then check logcat for SDK initialization. Filter with:
 
