@@ -89,6 +89,8 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | When to use `timeline search` vs `timeline logs`, hydration, search patterns, pitfalls |
 | Browse crash reports and issue groups | [recipes/issues.md](recipes/issues.md) | Advanced filters, status lifecycle, triage patterns |
 | Create or edit workflow recipes | [recipes/workflows.md](recipes/workflows.md) | Lifecycle commands, metadata files, template workflow patterns |
+| Create or manage workflow alerts | [recipes/workflow-alerts.md](recipes/workflow-alerts.md) | Basic and SLO alerts on charts; multi-tier patterns; UI limitations; required values checklist |
+| Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Alerts on crash/error volume: event thresholds, rate-of-change, device/session counts, new-issue notifications. "Issues" is bitdrift's crash reporting feature — use this for crash alerts |
 | Manage API keys, SDK keys, connectors | [recipes/admin.md](recipes/admin.md) | Key creation, permissions, connector setup |
 
 ## Output modes
@@ -354,4 +356,4 @@ If commands fail or behave unexpectedly:
 When reporting CLI issues, include the OS, how `bd` was installed, whether `bd auth` works, and any
 relevant `npx skills check` output if skills are involved.
 
-**Web UI–only features (no CLI equivalent):** Alerts (Basic + SLO), Session Replay, Saved Views on issues. Point users to the web UI for these.
+**Web UI–only features (no CLI equivalent):** Session Replay, Saved Views (Issue Views). The CLI can attach alerts to an existing Issue View by ID, but cannot create or manage views themselves. Point users to the web UI for these.
