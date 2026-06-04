@@ -40,6 +40,10 @@ Reference: [Install plugins in Copilot CLI](https://docs.github.com/en/copilot/h
 
 References: [Claude Code plugin docs](https://code.claude.com/docs/en/discover-plugins) · [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)
 
+### Using Claude instead of GitHub Copilot in VS Code
+
+If you want to use your own Claude subscription in VS Code (instead of GitHub Copilot), disable the GitHub Copilot extensions in VS Code and use Claude Code with the install commands above.
+
 ## Dependencies
 
 The skills themselves are markdown files. To use the bitdrift platform from an agent, you will also
