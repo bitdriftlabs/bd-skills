@@ -35,6 +35,28 @@ active right now.
 
 ---
 
+## Choose workflow granularity deliberately
+
+Use **one workflow for one analytic question or one coherent flow**. If the user is really asking
+about several related but distinct signals, prefer multiple workflows rather than one large
+catch-all workflow.
+
+Split into multiple workflows when:
+
+- the entry points represent different user journeys
+- different teams would reason about the results independently
+- the outputs are better compared side by side than merged into one workflow definition
+- the workflow has grown into a presentation artifact instead of a measurement artifact
+
+When the goal is a multi-panel operational view, build multiple focused workflows and compose their
+charts into a dashboard. Do not use workflow complexity as a substitute for dashboard composition.
+
+Large multi-entry workflows are still valid when the entries truly form one shared funnel or one
+tightly related measurement problem, but examples like a 14-entry-point operational board should be
+treated as a smell and revisited first.
+
+---
+
 ## Creating a Workflow
 
 Use `bd workflow create --help` for the command shape and `bd schema workflow.create` for the file
@@ -51,6 +73,20 @@ When creating a workflow, set the workflow description in metadata (typically vi
 detect, or capture, and, critically, why this workflow is being created at all (for example,
 to investigate a suspected regression, monitor adoption, or validate a hypothesis). Focus on capturing
 the intent over describing what the workflow does as this can be inferred from the configuration.
+
+## Organizing workflows with tags
+
+Use workflow tags to organize related workflows after the workflow boundaries are already sound.
+Tags help with discovery and saved workflow views, but they do **not** fix a workflow that should
+really be split apart.
+
+```bash
+bd workflow tag list
+bd workflow tag set <WORKFLOW_ID> --tag payments --tag critical
+```
+
+`bd workflow tag set` replaces the entire tag set for the workflow. Re-specify every tag you want
+to keep.
 
 ## Updating a Workflow
 
@@ -92,3 +128,48 @@ that is still happening now.
 Do **not** use this pattern to recover historical sessions that happened before the workflow was
 deployed. If the user needs past evidence, prefer issues, existing sessions, or already-captured
 workflow data.
+
+---
+
+## VIP / Known Entity Capture
+
+Use this pattern when the user wants **guaranteed session capture for specific users** — customer support escalations, executives, internal testers, or high-value accounts.
+
+### Prerequisites
+
+1. The app calls `setEntityID` / `setEntityId` with the user's identifier (iOS/Android SDK 0.23.0+)
+2. The entity has been bookmarked in the bitdrift UI, or created via `bd entity known upsert <entity_id> --display-name "Name"`
+
+### Why this beats the old field-match workaround
+
+The previous approach was to deploy a `generic_match` workflow filtering on a `user_id` field. That workflow deployed to **every device in the fleet** and matched on each one — wasteful and noisy. `known_entity_match` is evaluated against the server-managed known-entity set, so it only fires for bookmarked entities.
+
+### Workflow JSON
+
+```json
+{
+  "flows": [
+    {
+      "exclusive": {},
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "vip-session",
+            "known_entity_match": {}
+          }
+        }
+      ],
+      "action_rules": [
+        {
+          "rule_id": "capture-vip",
+          "flush_rule": {
+            "match_id": "vip-session"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+Deploy with `bd workflow create --workflow-file <file>` then `bd workflow deploy <id>`. No `deployment_expiration` — this should be a durable workflow that covers all current and future bookmarked entities automatically.

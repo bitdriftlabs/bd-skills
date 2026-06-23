@@ -65,5 +65,6 @@ When asked to validate an integration, check all items and produce a report with
 | 5 | Screen tracking on every screen |
 | 6 | TTI tracked |
 | 7 | Crash reporter linked with session URL |
-| 8 | User identity fields set after login |
+| 8 | Entity ID set after login via `setEntityID` / `setEntityId` (iOS/Android only; enables `bd entity` targeting) |
+| 8a | User identity fields set after login via `addField` |
 | 9 | dSYM/ProGuard mapping upload configured (if applicable) |

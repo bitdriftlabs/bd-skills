@@ -6,6 +6,10 @@ A **workflow** is the core building block for monitoring mobile app behavior. It
 - **Charts & Metrics** — on-device aggregation surfaced as dashboard panels
 - **Session Capture** — flush full buffered logs to backend for timeline inspection
 
+Model a workflow around **one coherent on-device detection or measurement problem**. If multiple
+entry points represent different questions, journeys, or operational surfaces, prefer multiple
+workflows and compose their chart outputs in a dashboard instead of forcing them into one workflow.
+
 > **Structural reference:** Use `bd schema workflow.create Workflow --depth 2` for the live proto
 > schema. This document focuses on patterns, pitfalls, and domain knowledge that the schema alone
 > doesn't convey.
@@ -38,12 +42,22 @@ A flow is an ordered list of steps matched sequentially. When all steps match, t
 | `ootb_match` | Built-in SDK event (`NETWORK_RESPONSE`, `APP_OPEN`, `RESOURCE`, etc.). Use `bd schema workflow.create OotbMatch --docs` for the live condition list and enum docs. Drill into a specific event with `bd schema workflow.create GenericOotbConditionType.<VALUE>` for field keys, types, and platform tags |
 | `generic_match` | Custom log field / compound condition tree |
 | `state_change_match` | Feature flag or state transition |
+| `known_entity_match` | Matches any event from a bookmarked (known) entity. Empty message — no fields. Use for VIP session capture |
 
 Use `generic_condition` for cross-platform workflows. `android_condition` / `apple_condition` are accepted by the API but show a violation in the UI when the workflow targets both platforms.
 
 `sample_rate` — numerator out of 1,000,000. `1000000` = 100%, `10000` = 1%. Omit for 100%.
 
 ### Key patterns
+
+**Known entity (VIP) capture** — fires on any event from a bookmarked entity. Requires the app to call `setEntityID`/`setEntityId` and the entity to be bookmarked in the UI or via `bd entity known upsert`:
+```json
+{
+  "match_id": "vip-session",
+  "known_entity_match": {}
+}
+```
+Pair with a `flush_rule` referencing `"vip-session"` to guarantee full session capture for all bookmarked entities.
 
 **OOTB + field filter** (AND an ootb event with a field condition):
 ```json
