@@ -96,13 +96,25 @@ Record how long the app takes to become interactive after a cold launch.
 
 **Verify:** Cold-launch the app and confirm `_app_launch_tti` appears with a plausible duration.
 
+### Entity ID
+
+**$bd-docs:** look up `entity id setEntityId`
+
+- `import { setEntityId } from '@bitdrift/react-native'`
+- Call `setEntityId(entityId)` after login or session restore
+- Update on account switch; call with the new user's ID
+- The value is hashed on the backend — the exact string is never stored
+- Requires React Native SDK 0.12.7+
+- Enables per-user lookup, known entity bookmarking, and `known_entity_match` workflow capture in the bitdrift UI
+
 ### Structured fields
 
-Attach metadata to all subsequent logs (user ID, account type, experiment variants).
+Attach metadata to all subsequent logs (user ID, account type, experiment variants). These are separate from entity ID — they appear as filterable fields on log lines.
 
 **$bd-docs:** look up `fields addField`
 
 - `addField("user_id", userId)` after login
+- On logout or account switch, set updated values (fields are overwritten by key)
 - Field names starting with `_` are reserved
 
 ### Spans

@@ -2,6 +2,9 @@
 
 Use `bd workflow charts <workflow_id>` to read metric data from any deployed workflow, including all 27 Instant Insights.
 
+Use `bd charts list` when you need to discover which charts exist before reading data from a
+workflow or assembling a dashboard.
+
 Chart configuration lives in the workflow proto's `actions[]` — there is no separate config layer.
 
 Stopped workflows return no new data but historical data is still accessible.
@@ -57,6 +60,46 @@ bd workflow charts <id> -o json --last 24h \
 If the workflow was just created or is still editable, consider changing the workflow rules to
 collect lower-cardinality data instead (for example use a normalized field such as
 `_path_template` rather than `_path`).
+
+---
+
+## Discovering charts with `bd charts list`
+
+`bd charts list` is the quickest way to discover charts visible to the authenticated user without
+loading chart data directly.
+
+Useful cases:
+
+- find candidate charts before building or updating a dashboard
+- find charts belonging to one workflow
+- list charts from workflows captured by a workflow view
+- fuzzy-match a chart by name before calling `bd workflow charts`
+
+```bash
+bd charts list --all -o json
+bd charts list --workflow-id <WORKFLOW_ID> -o json
+bd charts list --view-id <WORKFLOW_VIEW_ID> -o json
+bd charts list --chart-name "checkout" -o json
+```
+
+`bd charts list` also supports `--request-file` for advanced `ListChartsRequest` matching. As with
+other request-file driven commands, check `bd schema charts.list` first before writing payloads.
+
+Practical patterns:
+
+```bash
+# Show a compact inventory
+bd charts list --all -o jsonl --jq '{workflow_id, chart_name}'
+
+# Discover charts for one workflow
+bd charts list --workflow-id <WORKFLOW_ID> -o jsonl --jq '{chart_name, workflow_id}'
+
+# Discover charts from workflows contained in a workflow view
+bd charts list --view-id <VIEW_ID> -o jsonl --jq '{workflow_id, chart_name}'
+```
+
+Use `bd charts list` for discovery and inventory. Use `bd workflow charts <workflow_id>` or
+`bd charts load` when you need actual chart data.
 
 ---
 

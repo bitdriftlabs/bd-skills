@@ -1,6 +1,6 @@
 ---
 name: bd-cli
-description: "Guide for operating the bitdrift bd CLI and analyzing live bitdrift account data — workflows, charts, sessions, issues, keys, connectors, and app health investigations. Trigger when the user wants to run bd commands, inspect live platform data, debug an app with bitdrift, create or edit workflows, read charts or metrics, triage crashes, inspect session timelines, or automate bitdrift operations from the CLI."
+description: "Operate the bitdrift bd CLI against live account data. Trigger for: creating or editing workflows and dashboards, managing workflow/issue alerts, creating or using saved views, reading charts, triaging crashes, inspecting sessions, investigating app health, and admin tasks."
 license: PolyForm Shield License 1.0.0
 ---
 
@@ -24,7 +24,7 @@ The developer needs:
 1. The `bd` CLI: `brew tap bitdriftlabs/bd && brew install bd` if not installed - offer to call this for the user.
 2. Authentication: See Authentication section below.
 
-This skill was tested against `bd` **0.2.5**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
+This skill was tested against `bd` **0.2.15**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
 
 Direct the user to sign up at https://bitdrift.io/signup if new.
 
@@ -34,6 +34,9 @@ The CLI is self-documenting. Use `--help` at any level:
 
 ```bash
 bd --help                    # top-level commands
+bd charts --help             # chart discovery and raw chart loading
+bd dashboard --help          # dashboard commands
+bd view --help               # saved issue/workflow views
 bd workflow --help           # subcommands within workflow
 bd workflow list --help      # flags for a specific command
 ```
@@ -86,9 +89,14 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Look up Instant Insights IDs | [reference/instant-insights.md](reference/instant-insights.md) | 27 permanent workflow IDs for pre-built metrics |
 | Create, edit, or understand a workflow | [reference/workflow-schema.md](reference/workflow-schema.md) | Workflow patterns, match rules, actions, OOTB match gotchas, pitfalls; use `bd schema` for the live supported shape |
 | Read chart / metric data | [recipes/charts.md](recipes/charts.md) | Interpretation by chart type, aggregation scaling, NaN handling, grouped-chart fidelity checks |
-| Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | When to use `timeline search` vs `timeline logs`, hydration, search patterns, pitfalls |
+| Look up a user, browse known entities, or queue an offline capture | [recipes/entity.md](recipes/entity.md) | Entity lookup by ID/hash/device, known entity list/upsert/delete, record-next-online-time, webhook notification |
+| Create or manage dashboards | [recipes/dashboards.md](recipes/dashboards.md) | Dashboard lifecycle, composition guidance, and when to use dashboards vs more workflows |
+| Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | Workflow captured sessions, hydration, timeline search patterns, pitfalls |
 | Browse crash reports and issue groups | [recipes/issues.md](recipes/issues.md) | Advanced filters, status lifecycle, triage patterns |
 | Create or edit workflow recipes | [recipes/workflows.md](recipes/workflows.md) | Lifecycle commands, metadata files, template workflow patterns |
+| Create or manage workflow alerts | [recipes/workflow-alerts.md](recipes/workflow-alerts.md) | Basic and SLO alerts on charts; multi-tier patterns; UI limitations; required values checklist |
+| Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Condition-based and notification alerts on crash/error issue groups |
+| Create or manage saved views | [recipes/views.md](recipes/views.md) | Saved filters over issue groups and workflows — list, create, update, delete views; find view IDs for alerts or filtered listing |
 | Manage API keys, SDK keys, connectors | [recipes/admin.md](recipes/admin.md) | Key creation, permissions, connector setup |
 
 ## Output modes
@@ -100,6 +108,7 @@ Every command supports `-o` / `--output` to control formatting:
 | Human | `-o human` (default) | Pretty-printed terminal output. Good for quick looks, bad for parsing. |
 | JSON | `-o json` | Full JSON response. |
 | JSONL | `-o jsonl` | Newline-delimited JSON — one object per line. Falls back to `json` if unsupported. |
+| TOON | `-o toon` | Token-Oriented Object Notation. Useful when you want a compact machine-readable structure without raw JSON punctuation overhead. |
 
 `bd` writes progress and status messages to stderr. Use `2>/dev/null` when piping to jq or saving to a file.
 
@@ -114,6 +123,7 @@ bd workflow list -o json
 - **Interactive exploration**: skip `-o` entirely
 - **Extracting specific fields**: `-o json` with `--jq`
 - **Streaming or line-by-line processing**: `-o jsonl`
+- **List endpoints with per-row projection**: prefer `-o jsonl` with `--jq '{...}'`
 
 ## Pagination
 
@@ -154,7 +164,7 @@ live schema.
 
 ```bash
 # List with projection
-bd workflow list -o json --jq '[.workflows[] | {id, name: .name, status}]'
+bd workflow list -o jsonl --jq '{id, name: .name, status}'
 
 # Count results
 bd issue group list -o json --jq '.issue_groups | length'
@@ -164,6 +174,9 @@ bd workflow list -o json --jq '[.workflows[] | select(.status == "DEPLOYED") | {
 
 # Extract a single scalar
 bd workflow charts CXLl -o json --jq '.data[0].line_data.time_series[0].aggregated_rollup'
+
+# List visible charts for discovery
+bd charts list --all -o jsonl --jq '{workflow_id, chart_name}'
 
 # Flatten nested structures
 bd issue group list -o json --last 7d --jq '[.issue_groups[] | {reason: .metadata.reason, users: .stats.user_count}]'
@@ -175,6 +188,7 @@ Use `open` with `-ojson --jq .url -r` to get a web UI URL without opening a brow
 
 ```bash
 bd workflow open <id> -ojson --jq .url -r
+bd dashboard open <id> -ojson --jq .url -r
 bd issue group open <id> -ojson --jq .url -r
 bd issue open <id> -ojson --jq .url -r
 bd timeline open <id> -ojson --jq .url -r
@@ -212,7 +226,20 @@ sessions) or **ongoing data collection** (measure over time — treat as workflo
 - **Active** → [recipes/charts.md](recipes/charts.md), [recipes/issues.md](recipes/issues.md),
   [recipes/sessions.md](recipes/sessions.md), [recipes/workflows.md](recipes/workflows.md)
 - **Ongoing** → [recipes/workflows.md](recipes/workflows.md),
-  [reference/workflow-schema.md](reference/workflow-schema.md), [recipes/charts.md](recipes/charts.md)
+  [reference/workflow-schema.md](reference/workflow-schema.md), [recipes/charts.md](recipes/charts.md),
+  [recipes/dashboards.md](recipes/dashboards.md)
+
+### Workflow vs dashboard design
+
+Use **one workflow for one analytic question or one coherent event flow**. If different entry
+points answer different questions, represent different user journeys, or would be easier to reason
+about independently, split them into separate workflows.
+
+Use a **dashboard** to compose related chart outputs from multiple workflows. Prefer this over
+building giant multi-entry workflows whose real purpose is presentation. A workflow with many entry
+points can be valid when those entries are truly one shared funnel or one tightly related
+measurement problem, but examples like a 14-entry-point operational board are usually better modeled
+as multiple focused workflows plus a dashboard.
 
 A new capture workflow only sees **new** sessions after deployment — it cannot recover historical data.
 
@@ -354,4 +381,4 @@ If commands fail or behave unexpectedly:
 When reporting CLI issues, include the OS, how `bd` was installed, whether `bd auth` works, and any
 relevant `npx skills check` output if skills are involved.
 
-**Web UI–only features (no CLI equivalent):** Alerts (Basic + SLO), Session Replay, Saved Views on issues. Point users to the web UI for these.
+**Web UI–only features (no CLI equivalent):** Session Replay.

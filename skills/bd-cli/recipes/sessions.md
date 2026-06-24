@@ -1,9 +1,19 @@
 # Reading Session Timelines
 
-Two common entry points:
+Four common entry points:
 
-1. **From a workflow** — you have a workflow with a `flush_rule` and want its captured sessions
-2. **From a session ID** — you already have a session ID and want to inspect or search the timeline
+1. **From a user report** — you have an entity ID or device ID from a support ticket and want to see what happened
+2. **From a known entity** — you want to check on a bookmarked VIP (executive, beta tester, high-value account)
+3. **From a workflow** — you have a workflow with a `flush_rule` and want its captured sessions
+4. **From a session ID** — you already have a session ID and want to inspect or search the timeline
+
+---
+
+## From a User Report or Known Entity
+
+Use `bd entity get <entity_id>` (or `--entity-hash`, `--device-id`) to look up a specific user and get their recent sessions, crash summary, and device list. For bookmarked VIPs, browse with `bd entity known list` first to get the hash.
+
+See [entity.md](entity.md) for the full lookup flow, offline capture via `record-next-online-time`, and known entity management.
 
 ---
 

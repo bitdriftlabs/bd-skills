@@ -306,15 +306,24 @@ Record how long the app takes to become interactive after a cold launch.
 
 **Verify:** Cold-launch the app and confirm `_app_launch_tti` appears with a plausible duration.
 
-### Structured fields and user identity
+### Entity ID
 
-Attach metadata to all subsequent logs. Most commonly used for user identity after authentication.
+**$bd-docs:** look up `entity id setEntityId`
+
+- Call `Logger.setEntityId(entityId)` after login or session restore (Kotlin and Java)
+- Update on account switch; call with the new user's ID
+- The value is hashed on the backend — the exact string is never stored
+- Requires SDK 0.23.0+
+- Enables per-user lookup, known entity bookmarking, and `known_entity_match` workflow capture in the bitdrift UI
+
+### Structured fields
+
+Attach metadata to all subsequent logs — account type, subscription tier, experiment variants, app region, etc. These appear as filterable fields on log lines and are independent of entity ID.
 
 **$bd-docs:** look up `fields addField`
 
-- Set identity fields after login or session restore using `Logger.addField("user_id", user_id)`
+- `Logger.addField("account_type", "premium")` after login or session restore
 - On logout or account switch, set updated values (fields are overwritten by key)
-- Set any additional fields iwth valuable global metadata using `Logger.addField("key", value)`
 - Field names starting with `_` are reserved by bitdrift
 
 ### Spans
