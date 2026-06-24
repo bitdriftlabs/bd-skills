@@ -16,6 +16,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Reject versions with leading v
+        run: |
+          case "${{ inputs.version }}" in
+            v*)
+              echo "Version input must not start with 'v'. Use values like 1.2.3, not v1.2.3." >&2
+              exit 1
+              ;;
+          esac
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
