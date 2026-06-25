@@ -63,8 +63,9 @@ decision rule, follow the guidance in the main `bd-cli` skill before loading thi
 
 ## Chart reference format
 
-When referencing a workflow chart in a `ChartComponentLayout`, use only `workflow_id` and
-`chart_rule_id`. **Never include `aggregated_action_id`.**
+When referencing a workflow chart in a `ChartComponentLayout`, use `workflow_id` and
+`chart_rule_id`. The `aggregated_action_id` field is optional and every known working dashboard
+omits it.
 
 ```json
 {
@@ -77,19 +78,15 @@ When referencing a workflow chart in a `ChartComponentLayout`, use only `workflo
 }
 ```
 
-`aggregated_action_id` is deployment-specific and changes every time the workflow is stopped and
-redeployed. Including it causes charts to show "This chart is no longer available" after any
-workflow update, with no other error. The field is optional in the schema — always omit it.
-
 To get `chart_rule_id` values for a workflow:
 
 ```bash
 bd workflow describe <WORKFLOW_ID> -o json --jq '[.workflow.actions[] | {rule_id, field: .metric_chart_rule.time_series[0].histogram.value.name}]'
 ```
 
-**Verify against a real dashboard before building.** `bd schema` does not reveal this pitfall.
+**Verify against a real dashboard before building.** `bd schema` alone is not sufficient.
 Run `bd dashboard get <EXISTING_DASHBOARD_ID> -o json` to see the exact shape a working chart
-uses, and confirm `aggregated_action_id` is absent.
+uses before constructing your own payload.
 
 ---
 
