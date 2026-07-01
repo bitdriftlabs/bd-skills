@@ -88,6 +88,44 @@ bd workflow tag set <WORKFLOW_ID> --tag payments --tag critical
 `bd workflow tag set` replaces the entire tag set for the workflow. Re-specify every tag you want
 to keep.
 
+## Naming Chart Series
+
+**Any metric chart with more than one time series will show raw `aggregated_id` hashes as series
+labels unless chart metadata is explicitly provided.** Always supply a `--chart-metadata-file` when
+deploying a workflow whose `metric_chart_rule` has multiple time series.
+
+The `TimeSeriesMetadata[]` array inside `MetricChartMetadata` maps **positionally** to the time
+series in the workflow — `metadata[0].title` names `time_series[0]`, and so on.
+
+```json
+[
+  {
+    "rule_id": "my_count_chart",
+    "metadata": {
+      "title": "Requests by Step",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          { "y_axis": { "description": "Requests", "unit": "COUNT" }, "title": "Step 1", "sort_order": "MAX", "connector_export_config": [] },
+          { "y_axis": { "description": "Requests", "unit": "COUNT" }, "title": "Step 2", "sort_order": "MAX", "connector_export_config": [] },
+          { "y_axis": { "description": "Requests", "unit": "COUNT" }, "title": "Step 3", "sort_order": "MAX", "connector_export_config": [] }
+        ]
+      }
+    }
+  }
+]
+```
+
+Apply with:
+
+```bash
+bd workflow update --workflow-id <ID> --chart-metadata-file chart-metadata.json
+```
+
+This can be done after deployment without stopping the workflow.
+
+---
+
 ## Updating a Workflow
 
 Use `bd workflow update --help` for the accepted flags and `bd schema workflow.update` for the file

@@ -61,6 +61,61 @@ decision rule, follow the guidance in the main `bd-cli` skill before loading thi
 
 ---
 
+## Chart reference format
+
+When referencing a workflow chart in a `ChartComponentLayout`, use `workflow_id` and
+`chart_rule_id`. The `aggregated_action_id` field is optional and every known working dashboard
+omits it.
+
+```json
+{
+  "chart_id": {
+    "workflow": {
+      "workflow_id": "WORKFLOW_ID",
+      "chart_rule_id": "RULE_ID"
+    }
+  }
+}
+```
+
+To get `chart_rule_id` values for a workflow:
+
+```bash
+bd workflow describe <WORKFLOW_ID> -o json --jq '[.workflow.actions[] | {rule_id, field: .metric_chart_rule.time_series[0].histogram.value.name}]'
+```
+
+**Verify against a real dashboard before building.** `bd schema` alone is not sufficient.
+Run `bd dashboard get <EXISTING_DASHBOARD_ID> -o json` to see the exact shape a working chart
+uses before constructing your own payload.
+
+---
+
+## Section headings and layout
+
+Use `DashboardStylisticComponent` with a `text_component` to add section headings to a tab.
+The `variant` field follows HTML heading conventions: `"h1"`, `"h2"`, `"p"`, etc.
+
+**`row_span` must be `3`** for all stylistic components — the API rejects any other value.
+
+```json
+{
+  "stylistic_components": [
+    {
+      "id": "heading_latency",
+      "text_component": { "text": "Latency", "variant": "h2" },
+      "dashboard_layout_settings": {
+        "x": 0, "y": 0, "column_span": 12, "row_span": 3, "is_hidden": false
+      }
+    }
+  ]
+}
+```
+
+Charts use the same grid. A common layout is `column_span: 6, row_span: 3` (two charts per row).
+Place chart rows at `y = heading_y + 3` so they appear immediately below their section heading.
+
+---
+
 ## Other lifecycle commands
 
 ```bash
