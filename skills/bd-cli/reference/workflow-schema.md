@@ -42,7 +42,7 @@ A flow is an ordered list of steps matched sequentially. When all steps match, t
 | `ootb_match` | Built-in SDK event (`NETWORK_RESPONSE`, `APP_OPEN`, `RESOURCE`, etc.). Use `bd schema workflow.create OotbMatch --docs` for the live condition list and enum docs. Drill into a specific event with `bd schema workflow.create GenericOotbConditionType.<VALUE>` for field keys, types, and platform tags |
 | `generic_match` | Custom log field / compound condition tree |
 | `state_change_match` | Feature flag or state transition |
-| `known_entity_match` | Matches any event from a bookmarked (known) entity. Empty message — no fields. Use for VIP session capture |
+| `issue_match` | Server-side match on uploaded crash/ANR reports; takes a `bdrl_program` string. See `$bd-issue-match` for BDRL scripting guidance. |
 
 Use `generic_condition` for cross-platform workflows. `android_condition` / `apple_condition` are accepted by the API but show a violation in the UI when the workflow targets both platforms.
 
