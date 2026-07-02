@@ -83,3 +83,9 @@ bd issue list <group_id> -o json --limit 5 \
 |---|---|
 | Low crash count on a crash-loop | If a group shows 1 event in startup code, the app may be crash-looping — SDK sends reports on next successful launch, so rapid crash-on-startup loops underreport. Cross-check exit reasons (`6YYT`/`o30N`) — high exit rates with low crash counts = likely crash loop |
 | Missing `session_id` on some issues | Not all issue types attach a session; check for null before calling `bd timeline` |
+
+---
+
+## Workflow-based Issue Processing
+
+To filter uploaded crash reports or chart crash metrics using BDRL scripts, see `$bd-issue-match`.

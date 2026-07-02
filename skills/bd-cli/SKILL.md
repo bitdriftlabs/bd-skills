@@ -98,6 +98,7 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Condition-based and notification alerts on crash/error issue groups |
 | Create or manage saved views | [recipes/views.md](recipes/views.md) | Saved filters over issue groups and workflows — list, create, update, delete views; find view IDs for alerts or filtered listing |
 | Manage API keys, SDK keys, connectors | [recipes/admin.md](recipes/admin.md) | Key creation, permissions, connector setup |
+| Write or debug a BDRL script for an IssueMatch step | `$bd-issue-match` | BDRL scripting, crash metrics |
 
 ## Output modes
 
