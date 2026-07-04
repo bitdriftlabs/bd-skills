@@ -88,4 +88,4 @@ bd issue list <group_id> -o json --limit 5 \
 
 ## Workflow-based Issue Processing
 
-To filter uploaded crash reports or chart crash metrics using BDRL scripts, see `$bd-issue-match`.
+To filter uploaded crash reports or chart crash metrics using BDRL scripts, see [issue-match.md](issue-match.md).

@@ -2,7 +2,7 @@
 
 Recipes for emitting chart fields via `add_field` in IssueMatch BDRL scripts, for use with Plot Chart actions.
 
-> Fetch the live function reference before writing: `curl -sL https://docs.bitdrift.io/product/workflows/scripting/functions.md 2>/dev/null`
+> Fetch the live function reference before writing — use `$bd-docs` to fetch `product/workflows/scripting/functions.md`.
 
 ---
 
@@ -31,7 +31,7 @@ for_each(.feature_flags) -> |_i, flag| {
 
 Attach a `Plot Counter Chart` action with **Split by field: checkout_v2_flag**.
 
-See `$bd-cli` → `reference/workflow-schema.md` for the `metric_chart_rule` action JSON shape.
+See [../reference/workflow-schema.md](../reference/workflow-schema.md) for the `metric_chart_rule` action JSON shape.
 
 ---
 
@@ -98,14 +98,16 @@ Attach a `metric_chart_rule` action to the IssueMatch step. The `add_field` name
   "rule_id": "crash-by-category",
   "metric_chart_rule": {
     "time_series": [{
-      "count": { "value": { "match_id": "issue-step" } }
-    }],
-    "group_by": { "values": [{ "field_key": "error_category" }] }
+      "count": {
+        "value": { "match_id": "issue-step" },
+        "group_by": { "values": [{ "field_key": "error_category" }] }
+      }
+    }]
   }
 }
 ```
 
-See `$bd-cli` → `reference/workflow-schema.md` for full action shapes.
+See [../reference/workflow-schema.md](../reference/workflow-schema.md) for full action shapes.
 
 ---
 

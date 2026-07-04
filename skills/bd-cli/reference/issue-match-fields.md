@@ -26,16 +26,16 @@ Top-level crash category. Use this for coarse filtering before inspecting `.erro
 
 ```bdrl
 # Abort unless this is a native crash
-if .type != 5 {
+if .type != "NativeCrash" {
   abort
 }
 
 # Branch on crash category
-if .type == 5 {
+if .type == "NativeCrash" {
   add_field("category", "native")
-} else if .type == 3 {
+} else if .type == "JVMCrash" {
   add_field("category", "jvm")
-} else if .type == 1 {
+} else if .type == "AppNotResponding" {
   add_field("category", "anr")
 } else {
   abort
