@@ -130,6 +130,11 @@ Fetch `functions.md` for full signatures and examples.
 - `length(array_or_str)` — array length or string char count
 - `is_string(val)` / `is_null(val)` / `exists(path)` — type and presence checks
 - `string(val)` — coerce to string (fallible; pair with `??`)
+- `get(object_or_array, [path_segments])` — safe dynamic access; returns `(value, err)`, useful when iterating a list of possible keys instead of hardcoding each one
+- `filter(array) -> |i, v| { bool }` / `map(array) -> |i, v| { ... }` / `any(array) -> |i, v| { bool }` — closure-based array operations
+- `flatten(array)` — flatten nested arrays, e.g. after `map`-ing over `.errors` to collect each error's `stack_trace`
+
+Searching across **all** errors' stack frames (not just `.errors[0]`) needs `any`/`map`/`filter`/`flatten` — see [issue-match-metrics.md](issue-match-metrics.md#search-all-stack-frames-across-all-errors).
 
 ---
 

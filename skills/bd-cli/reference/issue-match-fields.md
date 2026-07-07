@@ -73,6 +73,7 @@ Metadata about the app instance that produced the report.
 |---|---|---|
 | `.app_metrics.app_id` | string | Bundle ID / application ID (e.g. `com.example.myapp`) |
 | `.app_metrics.app_version` | string | App version string (e.g. `8.4.1`) |
+| `.app_metrics.running_state` | string | Foreground/background state of the app process at capture time. Platform-specific values — see below. May be null. |
 
 ### `.feature_flags`
 
@@ -93,6 +94,38 @@ for_each(.feature_flags) -> |_i, flag| {
 
 # WRONG — feature_flags is not a keyed map
 .feature_flags.my_flag
+```
+
+### `.fields`
+
+Map of custom/global field key-values present on the report (e.g. fields set via
+`Logger.addField()`). Unlike `.feature_flags`, this **is** a keyed map, so direct path access
+works — but values are typed as "any," so check the type before use.
+
+| Path | Type | Notes |
+|---|---|---|
+| `.fields.<key>` | any | Custom field value. May be absent or a non-string type — always type-check. |
+
+```bdrl
+# fixed key
+value = .fields.prod_category
+if is_string(value) {
+  add_field("category", string(value) ?? "unknown")
+} else {
+  abort
+}
+```
+
+```bdrl
+# list of possible keys — use get() instead of hardcoding each one
+my_fields = ["prod_category", "option_split"]
+
+for_each(my_fields) -> |_index, key| {
+  value, err = get(.fields, [key])
+  if err == null && is_string(value) {
+    add_field(key, string(value) ?? "unknown")
+  }
+}
 ```
 
 ---
@@ -133,6 +166,28 @@ reason = string(.errors[0].reason) ?? ""
 parts = split(reason, ":")
 error_class = parts[0]  # e.g. "java.lang.NullPointerException"
 ```
+
+### `.app_metrics.running_state` — foreground/background state
+
+| Platform | Values |
+|---|---|
+| Android | `foreground`, `foreground_service`, `perceptible` |
+| Apple | `active`, `inactive`, `background` |
+
+**Android has no literal `"background"` value.** There is no single enum value meaning
+"backgrounded" on Android — define it as "anything that is not exactly `foreground`":
+
+```bdrl
+state = string(.app_metrics.running_state) ?? ""
+is_foreground = state == "foreground"
+if !is_foreground {
+  abort  # keeps only foreground reports; invert to !is_foreground to keep background instead
+}
+```
+
+Apple platforms do have a dedicated `"background"` value, so `state == "background"` works
+directly there — but a script meant to run cross-platform should still use the
+`!= "foreground"` form so it behaves correctly on Android too.
 
 ---
 
