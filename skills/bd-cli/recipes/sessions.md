@@ -74,7 +74,7 @@ If you want actual parallel request fan-out as well as non-blocking waits, use y
 ## Choosing What to Inspect
 
 Session timelines explain concrete behavior within a session. For population-wide questions
-(rankings, top-K, overall rates), prefer [charts](charts.md).
+(rankings, top-K, overall rates), prefer [charts](chart-reading.md).
 
 Prefer this order:
 

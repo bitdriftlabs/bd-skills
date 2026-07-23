@@ -1,7 +1,7 @@
 # Grouped Chart Fidelity and Recovery
 
 Use this file only after you have already observed a grouped-chart fidelity warning or another
-grouped-chart edge case. For normal chart reads, stay in `charts.md`.
+grouped-chart edge case. For normal chart reads, stay in `chart-reading.md`.
 
 ## `IdentifierMatch`: reuse returned series, don't invent selectors
 

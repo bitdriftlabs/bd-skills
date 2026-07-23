@@ -43,6 +43,7 @@ A flow is an ordered list of steps matched sequentially. When all steps match, t
 | `generic_match` | Custom log field / compound condition tree |
 | `state_change_match` | Feature flag or state transition |
 | `issue_match` | Server-side match on uploaded crash/ANR reports; takes a `bdrl_program` string. See [../recipes/issue-match.md](../recipes/issue-match.md) for BDRL scripting guidance. |
+| `known_entity_match` | Matches any event from a bookmarked entity (VIP capture). Requires `setEntityID`/`setEntityId` in the app and the entity to be bookmarked. See Key patterns below. |
 
 Use `generic_condition` for cross-platform workflows. `android_condition` / `apple_condition` are accepted by the API but show a violation in the UI when the workflow targets both platforms.
 

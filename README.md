@@ -5,6 +5,7 @@ Agent skills for [bitdrift](https://bitdrift.ai) — mobile observability that s
 - **bd-cli** — CLI usage: workflows, charts, sessions, issues, admin, IssueMatch/BDRL scripting
 - **bd-instrumentation** - Installing and configuring the SDK to instrument iOS, Android, or React Native apps
 - **bd-docs** — Fetch and search bitdrift documentation
+- **bd-cuj** — Setting up end-to-end Critical User Journey monitoring: conversion funnels, step duration alerting, path discovery, dashboards
 
 ## Installation
 

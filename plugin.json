@@ -1,7 +1,7 @@
 {
   "name": "bd",
   "description": "Agent skills for the bitdrift Capture mobile observability platform",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": {
     "name": "bitdrift"
   },
