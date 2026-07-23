@@ -95,7 +95,7 @@ uses before constructing your own payload.
 Use `DashboardStylisticComponent` with a `text_component` to add section headings to a tab.
 The `variant` field follows HTML heading conventions: `"h1"`, `"h2"`, `"p"`, etc.
 
-**`row_span` must be `3`** for all stylistic components — the API rejects any other value.
+The dashboard builder UI defaults text-component sections to `row_span: 3`; other positive values are accepted by the API but won't match the UI's own convention.
 
 ```json
 {
