@@ -28,6 +28,16 @@ This skill was tested against `bd` **0.2.15**. If commands fail unexpectedly, ch
 
 Direct the user to sign up at https://bitdrift.io/signup if new.
 
+## Other available skills
+
+bitdrift provides additional skills beyond this one. If a user's request fits one of these and the skill isn't available in your context, tell them it exists and suggest installing it with `npx skills add bitdriftlabs/bd-skills -s <name>` (then `npx skills update --all` to keep installed skills up to date):
+
+| Skill | When to use |
+|-------|-------------|
+| `bd-docs` | Conceptual questions about how bitdrift works — feature overviews, SDK guides, platform docs |
+| `bd-instrumentation` | Integrating the SDK — `Logger.start`, custom fields, crash reporting, network monitoring |
+| `bd-cuj` | Setting up end-to-end Critical User Journey monitoring — conversion funnels, step duration alerting, path discovery, dashboards |
+
 ## Discovering commands
 
 The CLI is self-documenting. Use `--help` at any level:
@@ -88,12 +98,14 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 |---|---|---|
 | Look up Instant Insights IDs | [reference/instant-insights.md](reference/instant-insights.md) | 27 permanent workflow IDs for pre-built metrics |
 | Create, edit, or understand a workflow | [reference/workflow-schema.md](reference/workflow-schema.md) | Workflow patterns, match rules, actions, OOTB match gotchas, pitfalls; use `bd schema` for the live supported shape |
-| Read chart / metric data | [recipes/charts.md](recipes/charts.md) | Interpretation by chart type, aggregation scaling, NaN handling, grouped-chart fidelity checks |
+| Read chart / metric data | [recipes/chart-reading.md](recipes/chart-reading.md) | Interpretation by chart type, aggregation scaling, NaN handling, grouped-chart fidelity checks |
 | Look up a user, browse known entities, or queue an offline capture | [recipes/entity.md](recipes/entity.md) | Entity lookup by ID/hash/device, known entity list/upsert/delete, record-next-online-time, webhook notification |
 | Create or manage dashboards | [recipes/dashboards.md](recipes/dashboards.md) | Dashboard lifecycle, composition guidance, and when to use dashboards vs more workflows |
 | Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | Workflow captured sessions, hydration, timeline search patterns, pitfalls |
 | Browse crash reports and issue groups | [recipes/issues.md](recipes/issues.md) | Advanced filters, status lifecycle, triage patterns |
 | Create or edit workflow recipes | [recipes/workflows.md](recipes/workflows.md) | Lifecycle commands, metadata files, template workflow patterns |
+| Design or add metric, funnel, or sankey chart rules | [recipes/chart-authoring.md](recipes/chart-authoring.md) | Which chart type to use, rate/histogram/funnel patterns, group_by guidance |
+| Set chart titles, series labels, or y-axis units | [recipes/chart-metadata.md](recipes/chart-metadata.md) | `--metadata-file` and `--chart-metadata-file` formats, unit reference, histogram prefix behavior |
 | Create or manage workflow alerts | [recipes/workflow-alerts.md](recipes/workflow-alerts.md) | Basic and SLO alerts on charts; multi-tier patterns; UI limitations; required values checklist |
 | Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Condition-based and notification alerts on crash/error issue groups |
 | Create or manage saved views | [recipes/views.md](recipes/views.md) | Saved filters over issue groups and workflows — list, create, update, delete views; find view IDs for alerts or filtered listing |
@@ -224,10 +236,10 @@ Decide: **active investigation** (something happening now — start with existin
 sessions) or **ongoing data collection** (measure over time — treat as workflow design). See
 [recipes/workflows.md](recipes/workflows.md) for the full decision framework.
 
-- **Active** → [recipes/charts.md](recipes/charts.md), [recipes/issues.md](recipes/issues.md),
+- **Active** → [recipes/chart-reading.md](recipes/chart-reading.md), [recipes/issues.md](recipes/issues.md),
   [recipes/sessions.md](recipes/sessions.md), [recipes/workflows.md](recipes/workflows.md)
 - **Ongoing** → [recipes/workflows.md](recipes/workflows.md),
-  [reference/workflow-schema.md](reference/workflow-schema.md), [recipes/charts.md](recipes/charts.md),
+  [reference/workflow-schema.md](reference/workflow-schema.md), [recipes/chart-reading.md](recipes/chart-reading.md),
   [recipes/dashboards.md](recipes/dashboards.md)
 
 ### Workflow vs dashboard design
@@ -250,7 +262,7 @@ When the question is about ranking, comparing, or aggregating across many users 
 inspecting a single session — start with grouped charts, not session timelines. Default to the
 **lightest trustworthy answer first**: prefer the shortest honest answer the existing grouped chart
 can support. Before answering from a grouped chart, load
-[recipes/charts.md](recipes/charts.md) for the answering strategy and fidelity checks.
+[recipes/chart-reading.md](recipes/chart-reading.md) for the answering strategy and fidelity checks.
 
 ### Simple metric lookups
 

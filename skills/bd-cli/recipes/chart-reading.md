@@ -58,8 +58,20 @@ bd workflow charts <id> -o json --last 24h \
 ```
 
 If the workflow was just created or is still editable, consider changing the workflow rules to
-collect lower-cardinality data instead (for example use a normalized field such as
-`_path_template` rather than `_path`).
+collect lower-cardinality data instead:
+
+1. **Narrow the time range** — shorter windows reduce the number of distinct values seen.
+2. **Deploy a custom workflow** with a lower-cardinality `group_by` field (e.g. group by app
+   version or platform instead of a high-cardinality field like error message or user ID).
+3. **Escalate to a bitdrift SA** — for complex cardinality problems, a solutions architect can help
+   design the right field strategy.
+
+**Network charts specifically:** cardinality overflow on network workflows is almost always caused
+by grouping on `_path` instead of `_path_template`. `_path` contains the actual request path with
+variable segments (e.g. `/users/12345`), producing one series per unique ID. `_path_template`
+normalises these (e.g. `/users/<id>`). This alone usually fixes overflow for network charts. If
+you control the network logging via `HttpRequestInfo` (Android) / `HTTPRequestInfo` (iOS), supply
+a normalized path template field directly for precise control.
 
 ---
 
@@ -231,6 +243,31 @@ bd workflow charts <id> -o json --last 24h \
 
 Do not say "latency is 120 ms" or "response size is 30 KB" without also stating which percentile
 that represents.
+
+#### Histograms and bandwidth questions
+
+The "Request Size by Endpoint" (z5Aq) and "Response Size by Endpoint" (fL3u) Instant Insight
+charts are histograms tracking the **distribution of payload sizes across requests**. The
+`aggregated_rollup` is the whole-window percentile (e.g. p50 request size over the queried period)
+— useful for comparing typical payload size across endpoints.
+
+**What histograms cannot tell you:** Total bandwidth consumed per endpoint — that requires summing
+bytes across all requests, which is a counter not a histogram. To rank endpoints by total bytes,
+deploy a counter workflow:
+
+```bash
+cat > /tmp/bytes-by-endpoint.json << 'EOF'
+{
+  "name": "Bytes by Endpoint",
+  "flows": [{ "steps": [{ "match_rule": { "match_id": "r", "ootb_match": { "generic_condition": "NETWORK_RESPONSE" } } }] }],
+  "actions": [
+    { "rule_id": "request_bytes", "metric_chart_rule": { "time_series": [{ "counter": { "value": { "match_id": "r", "name": "_request_body_bytes_sent_count" }, "group_by": { "values": [{ "field_key": "_path_template" }] } } }] } },
+    { "rule_id": "response_bytes", "metric_chart_rule": { "time_series": [{ "counter": { "value": { "match_id": "r", "name": "_response_body_bytes_received_count" }, "group_by": { "values": [{ "field_key": "_path_template" }] } } }] } }
+  ]
+}
+EOF
+bd workflow create /tmp/bytes-by-endpoint.json --deploy
+```
 
 ### Table
 Returned when a count or rate chart has `group_by` and `table_display_mode` set. Data is in

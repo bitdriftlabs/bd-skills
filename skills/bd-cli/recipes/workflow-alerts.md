@@ -280,3 +280,10 @@ Once you have a workflow ID:
 - **Updating an alert replaces the full config.** Pass `--id` to update an existing alert; omit
   it to create a new one. Either way, all desired field values must be re-specified — omitted
   fields are cleared. Use `--delete` to remove an alert entirely.
+- **Active alerts block workflow logic edits.** A workflow with an active alert cannot have its
+  graph modified. See the full pattern in
+  [workflows.md](./workflows.md#updating-a-workflow-with-active-alerts).
+- **Aggregated_action_ids change after a workflow update.** The `aggregated_action_id` captured
+  before updating a workflow is stale after redeploy — the workflow's series get new IDs.
+  Always re-fetch the current IDs with `bd workflow describe` *after* redeploying before
+  recreating alerts. Using a stale ID produces a "No Data Found Yet" alert that never fires.

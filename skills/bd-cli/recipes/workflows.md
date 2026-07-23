@@ -68,11 +68,43 @@ purposes:
 - `--metadata-file` sets workflow metadata such as description and per-rule panel titles
 - `--chart-metadata-file` sets per-series chart metadata such as legend labels
 
+**`--chart-metadata-file`** sets series labels and y-axis units. Without it, charts fall back to raw aggregated action IDs as series labels. **`--metadata-file`** sets the panel title shown above each rule in the workflow graph. See [chart-metadata.md](./chart-metadata.md) for formats, unit reference, histogram prefix behavior, and update patterns.
+
 When creating a workflow, set the workflow description in metadata (typically via
 `--metadata-file`). Use it to explain the workflow's purpose: what it is trying to measure,
 detect, or capture, and, critically, why this workflow is being created at all (for example,
 to investigate a suspected regression, monitor adoption, or validate a hypothesis). Focus on capturing
 the intent over describing what the workflow does as this can be inferred from the configuration.
+
+## Network path fields: `_path` vs `_path_template`
+
+These two fields serve different purposes and must not be swapped:
+
+| Field | What it contains | Use it for |
+|---|---|---|
+| `_path` | The actual request path (e.g. `/api/v1/user/12345`) | Matcher conditions |
+| `_path_template` | Normalized form with variable segments collapsed (e.g. `/api/v1/user/<id>`) | `group_by_fields` |
+
+**Matching:** always use `_path` in `base_matcher` conditions.
+- Static path (no variable segments): `"operator": "EQUAL", "string_value": "/api/v1/graphql"`
+- Dynamic path (contains IDs or other variable segments): `"operator": "REGEX", "string_value": "/api/v1/user/.*"`
+
+**Grouping:** use `_path_template` in `group_by_fields` at the top-level `Workflow` object so charts show one series per endpoint pattern rather than one series per unique path.
+
+```json
+{
+  "name": "...",
+  "flows": [...],
+  "actions": [...],
+  "group_by_fields": ["_path_template"]
+}
+```
+
+Note: `group_by_fields` lives in the top-level `Workflow` JSON, not in `--chart-metadata-file`.
+
+**`or_matcher` warning:** do not use `or_matcher` as the root of `generic_match` inside an `ootb_match`. The API accepts it but the workflow page fails to render in the UI. Always use `and_matcher` at the root, with `or_matcher` nested inside for multi-value conditions on a single field.
+
+---
 
 ## Organizing workflows with tags
 
@@ -96,9 +128,107 @@ inputs.
 The durable workflow-level rule is: **stop deployed workflows before editing workflow logic.**
 Metadata and chart metadata can be updated independently of the workflow graph.
 
+If the workflow has active alerts, you must delete them before stopping and editing. See
+[Updating a Workflow with Active Alerts](#updating-a-workflow-with-active-alerts) below.
+
 When updating a workflow, also update the description in metadata if the workflow's purpose, scope,
 or reason for existing has changed. Keep the description aligned with both what the workflow does
 and, if relevant, why the team is running it.
+
+## Updating a Workflow with Active Alerts
+
+A workflow with an active alert cannot have its logic edited. The UI shows "This Workflow has an active alert. Please delete the alert to make changes." The same constraint applies via CLI. The pattern is: capture → delete → stop → update → deploy → re-create.
+
+**Before starting:** consider whether the workflow change affects the alert's semantics. If you're changing a matcher, threshold source, or flow structure, the existing alert config may no longer be correct — not just stale. Review the alert name, threshold, and target series against the updated workflow before blindly re-applying the backup.
+
+### 1. Capture the alert config
+
+```bash
+bd workflow alert config <WORKFLOW_ID> <CHART_RULE_ID> -o json > alert-backup.json
+```
+
+Note the `id`, `aggregated_action_id`, and `alert_type` from the output.
+
+### 2. Delete the alert
+
+```bash
+bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <AGGREGATED_ACTION_ID> \
+  --id <ALERT_ID> --delete
+```
+
+### 3. Stop, update, and redeploy the workflow
+
+```bash
+bd workflow stop <WORKFLOW_ID>
+bd workflow update --workflow-id <WORKFLOW_ID> --workflow-file updated.json
+bd workflow deploy <WORKFLOW_ID>
+```
+
+### 4. Fetch the new aggregated_action_id
+
+> **Critical:** Updating workflow logic changes every `aggregated_id` in the workflow. The ID captured in step 1 is now stale. Do not use it to recreate the alert — it will cause "No Data Found Yet" in the alert UI even though the workflow is producing data.
+
+After redeploying, fetch the current aggregated_action_id for each rule that had an alert:
+
+```bash
+bd workflow describe <WORKFLOW_ID> -o json \
+  --jq '.workflow.actions[] | select(.rule_id == "<CHART_RULE_ID>") | .metric_chart_rule.time_series[].aggregated_id'
+```
+
+Use the value returned here (not the one from step 1) in the `bd workflow alert upsert` call below.
+
+### 5. Re-create the alert
+
+Use `bd workflow alert upsert` without `--id` to create a new alert. Translate the captured JSON back to CLI flags:
+
+> `bd workflow alert upsert` does not support `--request-file`, so the JSON backup cannot be passed directly. You must translate the fields to CLI flags using the tables below.
+
+**SLO alert fields:**
+
+| JSON field | CLI flag |
+|---|---|
+| `common_config.name` | `--name` |
+| `common_config.description` | `--description` |
+| `slo_alert.slo_duration` | `--slo-duration` (convert from seconds) |
+| `slo_alert.slo_target` | `--slo-target` |
+| `slo_alert.window_and_burn_rates[]` | `--slo-window short=X,long=Y,burn=Z` (one flag per window) |
+
+**Basic alert fields:**
+
+| JSON field | CLI flag |
+|---|---|
+| `basic_alert.threshold` | `--threshold` |
+| `basic_alert.condition` | `--threshold-condition above\|below` |
+| `basic_alert.window` | `--basic-window` (convert from seconds) |
+| `basic_alert.histogram_configuration.percentile` | `--histogram-percentile` |
+
+**Duration conversion** — proto encodes as `"Xs"` (e.g. `"300.000000000s"`); strip the `.000000000s` and divide:
+
+| Seconds | CLI value |
+|---|---|
+| 300 | `5m` |
+| 1800 | `30m` |
+| 3600 | `1h` |
+| 7200 | `2h` |
+| 21600 | `6h` |
+| 86400 | `24h` |
+| 2592000 | `30d` |
+
+Example re-create for a 30-day SLO with MWMBR windows:
+
+```bash
+bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <AGGREGATED_ACTION_ID> \
+  --type slo \
+  --name "My SLO Alert" \
+  --slo-duration 30d \
+  --slo-target 0.99 \
+  --slo-window short=5m,long=1h,burn=16.8 \
+  --slo-window short=30m,long=6h,burn=5.6 \
+  --slo-window short=2h,long=24h,burn=2.8 \
+  --notification group=<GROUP_NAME>
+```
+
+---
 
 ## Using `describe` as a Template
 
