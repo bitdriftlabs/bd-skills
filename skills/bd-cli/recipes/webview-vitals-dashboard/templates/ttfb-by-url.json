@@ -1,0 +1,78 @@
+{
+  "name": "Time to First Byte by URL",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "ttfb_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_type",
+                      "operator": "EQUAL",
+                      "string_value": "end"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_metric",
+                      "operator": "EQUAL",
+                      "string_value": "TTFB"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "ttfb_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "histogram": {
+              "value": {
+                "match_id": "ttfb_match",
+                "name": "_value"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "_page_url"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

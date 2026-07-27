@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "lcp_good_rate_chart",
+    "metadata": {
+      "title": "LCP Good Rate (SLO)",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "LCP Good Rate (SLO)",
+            "y_axis": {
+              "description": "LCP Good Rate (SLO)",
+              "unit": "PERCENTAGE"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

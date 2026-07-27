@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "inp_chart",
+    "metadata": {
+      "title": "INP by App Version",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "INP by App Version",
+            "y_axis": {
+              "description": "INP by App Version",
+              "unit": "MILLISECONDS"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

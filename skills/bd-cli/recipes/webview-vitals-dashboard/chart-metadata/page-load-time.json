@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "page_load_chart",
+    "metadata": {
+      "title": "Page Load Time",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Page Load Time",
+            "y_axis": {
+              "description": "Page Load Time",
+              "unit": "MILLISECONDS"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

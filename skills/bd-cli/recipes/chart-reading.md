@@ -115,6 +115,27 @@ Use `bd charts list` for discovery and inventory. Use `bd workflow charts <workf
 
 ---
 
+## App-Scoped Instant Insight Queries (API only)
+
+`bd workflow charts` returns account-wide data for Instant Insights — there is no `--app-id` flag.
+Always caveat this to the user when reading an Instant Insight through the CLI.
+
+The underlying `GetChartsData` API does support a `platform_filter` that scopes results to a
+specific app, but it is not yet exposed via the CLI:
+
+```json
+{
+  "charts": [{ "chart_id": { "workflow": { "workflow_id": "CXLl", "chart_rule_id": "..." } } }],
+  "time_range": { "relative_time_range": { "duration": "86400s" } },
+  "platform_filter": [
+    { "android": { "apps": [{ "app_id": "com.example.myapp" }] } }
+  ]
+}
+```
+
+Until this reaches the CLI, get app-specific metrics by querying workflows that are already
+scoped to the target app via `platform_targets`, rather than an Instant Insight.
+
 ## JSON Output Shape
 
 Use `bd schema workflow.charts` to explore the full response shape. Key fields for jq:

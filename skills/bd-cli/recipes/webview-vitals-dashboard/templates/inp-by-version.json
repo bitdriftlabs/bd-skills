@@ -1,0 +1,78 @@
+{
+  "name": "Interaction to Next Paint by App Version",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "inp_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_type",
+                      "operator": "EQUAL",
+                      "string_value": "end"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_metric",
+                      "operator": "EQUAL",
+                      "string_value": "INP"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "inp_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "histogram": {
+              "value": {
+                "match_id": "inp_match",
+                "name": "_value"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "app_version"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

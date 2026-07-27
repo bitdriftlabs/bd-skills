@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "resource_error_chart",
+    "metadata": {
+      "title": "Resource Errors",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Resource Errors",
+            "y_axis": {
+              "description": "Resource Errors",
+              "unit": "COUNT"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

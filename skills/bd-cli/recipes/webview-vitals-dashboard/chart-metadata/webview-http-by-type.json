@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "http_type_chart",
+    "metadata": {
+      "title": "Webview HTTP Requests by Type",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Webview HTTP Requests by Type",
+            "y_axis": {
+              "description": "Webview HTTP Requests by Type",
+              "unit": "COUNT"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

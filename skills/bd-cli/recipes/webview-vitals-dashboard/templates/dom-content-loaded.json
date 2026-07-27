@@ -1,0 +1,78 @@
+{
+  "name": "DOM Content Loaded Time",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "dom_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.lifecycle"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_event",
+                      "operator": "EQUAL",
+                      "string_value": "DOMContentLoaded"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "dom_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "histogram": {
+              "value": {
+                "match_id": "dom_match",
+                "name": "_performance_time"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "app_version"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

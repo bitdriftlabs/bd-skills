@@ -101,6 +101,8 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Read chart / metric data | [recipes/chart-reading.md](recipes/chart-reading.md) | Interpretation by chart type, aggregation scaling, NaN handling, grouped-chart fidelity checks |
 | Look up a user, browse known entities, or queue an offline capture | [recipes/entity.md](recipes/entity.md) | Entity lookup by ID/hash/device, known entity list/upsert/delete, record-next-online-time, webhook notification |
 | Create or manage dashboards | [recipes/dashboards.md](recipes/dashboards.md) | Dashboard lifecycle, composition guidance, and when to use dashboards vs more workflows |
+| Deploy a webview Web Vitals dashboard | [recipes/webview-vitals-dashboard.md](recipes/webview-vitals-dashboard.md) | 29 ready-made workflows for CWV, page load, errors, network, and engagement on Android webviews |
+| Look up webview log field names | [reference/webview-fields.md](reference/webview-fields.md) | All webview log types, their `message` values, `_source`, span fields, and available group-by fields |
 | Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | Workflow captured sessions, hydration, timeline search patterns, pitfalls |
 | Browse crash reports and issue groups | [recipes/issues.md](recipes/issues.md) | Advanced filters, status lifecycle, triage patterns |
 | Create or edit workflow recipes | [recipes/workflows.md](recipes/workflows.md) | Lifecycle commands, metadata files, template workflow patterns |

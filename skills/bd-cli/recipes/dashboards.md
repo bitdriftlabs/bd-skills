@@ -59,60 +59,25 @@ If you need the dashboard only as a curated landing page for existing metrics, k
 separate and let the dashboard do the composition work. For the higher-level workflow-vs-dashboard
 decision rule, follow the guidance in the main `bd-cli` skill before loading this recipe.
 
----
+### Always use `time_series_display_mode` for metric charts
 
-## Chart reference format
-
-When referencing a workflow chart in a `ChartComponentLayout`, use `workflow_id` and
-`chart_rule_id`. The `aggregated_action_id` field is optional and every known working dashboard
-omits it.
+When setting `metric_chart_metadata` on a dashboard chart, always use `time_series_display_mode`:
 
 ```json
-{
-  "chart_id": {
-    "workflow": {
-      "workflow_id": "WORKFLOW_ID",
-      "chart_rule_id": "RULE_ID"
-    }
-  }
+"metric_chart_metadata": {
+  "time_series_display_mode": {},
+  "metadata": [...]
 }
 ```
 
-To get `chart_rule_id` values for a workflow:
+Do **not** use `histogram_bar_chart_display_mode` — it locks the chart into bar view and removes
+the user's ability to switch to line chart in the UI. `time_series_display_mode` preserves both
+options regardless of chart type (count, rate, or histogram).
 
-```bash
-bd workflow describe <WORKFLOW_ID> -o json --jq '[.workflow.actions[] | {rule_id, field: .metric_chart_rule.time_series[0].histogram.value.name}]'
-```
+### `bd dashboard get` does not return layout settings
 
-**Verify against a real dashboard before building.** `bd schema` alone is not sufficient.
-Run `bd dashboard get <EXISTING_DASHBOARD_ID> -o json` to see the exact shape a working chart
-uses before constructing your own payload.
-
----
-
-## Section headings and layout
-
-Use `DashboardStylisticComponent` with a `text_component` to add section headings to a tab.
-The `variant` field follows HTML heading conventions: `"h1"`, `"h2"`, `"p"`, etc.
-
-The dashboard builder UI defaults text-component sections to `row_span: 3`; other positive values are accepted by the API but won't match the UI's own convention.
-
-```json
-{
-  "stylistic_components": [
-    {
-      "id": "heading_latency",
-      "text_component": { "text": "Latency", "variant": "h2" },
-      "dashboard_layout_settings": {
-        "x": 0, "y": 0, "column_span": 12, "row_span": 3, "is_hidden": false
-      }
-    }
-  ]
-}
-```
-
-Charts use the same grid. A common layout is `column_span: 6, row_span: 3` (two charts per row).
-Place chart rows at `y = heading_y + 3` so they appear immediately below their section heading.
+The GET response omits `layout_settings` (x, y, column_span, row_span). To update an existing
+dashboard, keep a copy of the original creation payload rather than reconstructing it from GET.
 
 ---
 

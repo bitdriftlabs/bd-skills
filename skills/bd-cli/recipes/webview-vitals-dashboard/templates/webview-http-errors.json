@@ -1,0 +1,87 @@
+{
+  "name": "Webview HTTP Errors by Host",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "http_error_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_name",
+                      "operator": "EQUAL",
+                      "string_value": "_http"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_type",
+                      "operator": "EQUAL",
+                      "string_value": "end"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_result",
+                      "operator": "NOT_EQUAL",
+                      "string_value": "success"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "http_errors_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "count": {
+              "value": {
+                "match_id": "http_error_match"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "_host"
+                  },
+                  {
+                    "field_key": "_status_code"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

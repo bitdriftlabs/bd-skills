@@ -1,0 +1,73 @@
+{
+  "name": "Webview User Interactions",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "interaction_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.userInteraction"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "interaction_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "count": {
+              "value": {
+                "match_id": "interaction_match"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "_interaction_type"
+                  },
+                  {
+                    "field_key": "_tag_name"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

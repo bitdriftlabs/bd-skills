@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "ttfb_chart",
+    "metadata": {
+      "title": "TTFB by URL",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "TTFB by URL",
+            "y_axis": {
+              "description": "TTFB by URL",
+              "unit": "MILLISECONDS"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]
