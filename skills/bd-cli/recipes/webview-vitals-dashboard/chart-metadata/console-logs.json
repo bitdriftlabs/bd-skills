@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "console_chart",
+    "metadata": {
+      "title": "Console Logs",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Console Logs",
+            "y_axis": {
+              "description": "Console Logs",
+              "unit": "COUNT"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

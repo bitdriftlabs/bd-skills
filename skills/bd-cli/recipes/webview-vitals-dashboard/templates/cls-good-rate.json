@@ -1,0 +1,118 @@
+{
+  "name": "CLS Good Rate",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "cls_good",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.webVital"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_metric",
+                      "operator": "EQUAL",
+                      "string_value": "CLS"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_rating",
+                      "operator": "EQUAL",
+                      "string_value": "good"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    },
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "cls_all",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.webVital"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_metric",
+                      "operator": "EQUAL",
+                      "string_value": "CLS"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "cls_good_rate_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "rate": {
+              "numerator": {
+                "match_id": "cls_good"
+              },
+              "denominator": {
+                "match_id": "cls_all"
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

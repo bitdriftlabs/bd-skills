@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "http_success_rate_chart",
+    "metadata": {
+      "title": "Webview HTTP Success Rate (SLO)",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Webview HTTP Success Rate (SLO)",
+            "y_axis": {
+              "description": "Webview HTTP Success Rate (SLO)",
+              "unit": "PERCENTAGE"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

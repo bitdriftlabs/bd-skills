@@ -1,0 +1,73 @@
+{
+  "name": "Webview Not Initialized",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "not_init_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.notInitialized"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "not_init_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "count": {
+              "value": {
+                "match_id": "not_init_match"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "reason"
+                  },
+                  {
+                    "field_key": "app_version"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Webview Resource Errors by Level",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "resource_error_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "message",
+                      "operator": "EQUAL",
+                      "string_value": "webview.resourceError"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "resource_error_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "count": {
+              "value": {
+                "match_id": "resource_error_match"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "log_level"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

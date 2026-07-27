@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "interaction_chart",
+    "metadata": {
+      "title": "User Interactions",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "User Interactions",
+            "y_axis": {
+              "description": "User Interactions",
+              "unit": "COUNT"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

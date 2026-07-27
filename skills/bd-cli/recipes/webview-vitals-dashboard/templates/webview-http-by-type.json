@@ -1,0 +1,77 @@
+{
+  "name": "Webview HTTP Requests by Type",
+  "flows": [
+    {
+      "steps": [
+        {
+          "match_rule": {
+            "match_id": "http_type_match",
+            "generic_match": {
+              "and_matcher": {
+                "matchers": [
+                  {
+                    "base_matcher": {
+                      "log_field": "_source",
+                      "operator": "EQUAL",
+                      "string_value": "webview"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_name",
+                      "operator": "EQUAL",
+                      "string_value": "_http"
+                    }
+                  },
+                  {
+                    "base_matcher": {
+                      "log_field": "_span_type",
+                      "operator": "EQUAL",
+                      "string_value": "end"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "exit_conditions": [],
+          "save_fields": []
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "rule_id": "http_type_chart",
+      "metric_chart_rule": {
+        "time_series": [
+          {
+            "count": {
+              "value": {
+                "match_id": "http_type_match"
+              },
+              "group_by": {
+                "values": [
+                  {
+                    "field_key": "_request_type"
+                  }
+                ]
+              }
+            },
+            "track_unique": {
+              "device_id": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "platform_targets": [
+    {
+      "android": {
+        "apps": []
+      }
+    }
+  ],
+  "group_by_fields": []
+}

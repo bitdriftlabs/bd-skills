@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "fcp_chart",
+    "metadata": {
+      "title": "FCP by URL",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "FCP by URL",
+            "y_axis": {
+              "description": "FCP by URL",
+              "unit": "MILLISECONDS"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]

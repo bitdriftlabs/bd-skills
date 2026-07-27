@@ -1,0 +1,22 @@
+[
+  {
+    "rule_id": "initialized_chart",
+    "metadata": {
+      "title": "Webview Initialized",
+      "metric_chart_metadata": {
+        "time_series_display_mode": {},
+        "metadata": [
+          {
+            "title": "Webview Initialized",
+            "y_axis": {
+              "description": "Webview Initialized",
+              "unit": "COUNT"
+            },
+            "sort_order": "MAX",
+            "connector_export_config": []
+          }
+        ]
+      }
+    }
+  }
+]
