@@ -45,6 +45,17 @@ def discover_manifest_paths(repo_root: Path) -> list[Path]:
     return paths
 
 
+def discover_skill_version_paths(repo_root: Path) -> list[Path]:
+    skills_root = repo_root / "skills"
+    if not skills_root.is_dir():
+        return []
+    return [
+        skill_dir / "VERSION"
+        for skill_dir in sorted(skills_root.iterdir())
+        if skill_dir.is_dir() and (skill_dir / "SKILL.md").exists()
+    ]
+
+
 def load_json(path: Path) -> dict:
     with path.open(encoding="utf-8") as handle:
         return json.load(handle)
@@ -72,6 +83,14 @@ def update_manifest(path: Path, version: str, check_only: bool) -> tuple[bool, s
     raise SystemExit(f"Unsupported manifest type: {relative_path}")
 
 
+def update_skill_version(path: Path, version: str, check_only: bool) -> tuple[bool, str | None]:
+    current_version = path.read_text(encoding="utf-8").strip() if path.exists() else None
+    changed = current_version != version
+    if not check_only and changed:
+        path.write_text(version + "\n", encoding="utf-8")
+    return changed, current_version
+
+
 def main() -> int:
     args = parse_args()
     version = args.version.removeprefix("v")
@@ -82,6 +101,7 @@ def main() -> int:
 
     repo_root = Path(args.repo).resolve()
     manifests = discover_manifest_paths(repo_root)
+    skill_version_paths = discover_skill_version_paths(repo_root)
 
     mismatches: list[str] = []
     changed_paths: list[str] = []
@@ -91,6 +111,17 @@ def main() -> int:
             manifest, version=version, check_only=args.check
         )
         relative_path = manifest.relative_to(repo_root).as_posix()
+        if args.check:
+            if current_version != version:
+                mismatches.append(f"{relative_path}: {current_version} != {version}")
+        elif changed:
+            changed_paths.append(relative_path)
+
+    for version_path in skill_version_paths:
+        changed, current_version = update_skill_version(
+            version_path, version=version, check_only=args.check
+        )
+        relative_path = version_path.relative_to(repo_root).as_posix()
         if args.check:
             if current_version != version:
                 mismatches.append(f"{relative_path}: {current_version} != {version}")
