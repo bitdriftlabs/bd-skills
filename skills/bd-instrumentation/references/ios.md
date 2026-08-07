@@ -240,7 +240,13 @@ Instrument URLSession for automatic HTTP traffic capture.
 - **Without swizzling:** `.enableIntegrations([.urlSession()], disableSwizzling: true)` then create sessions using `URLSession(instrumentedSessionWithConfiguration:delegate:delegateQueue:)`
 - Alamofire wraps URLSession, so swizzling covers it
 
+**For client-driven tracing:** Use `$bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **iOS** network integration section to verify the required integration is configured.
+
 **Verify:** Trigger a network request and confirm HTTP events appear in the timeline.
+
+### WKWebView monitoring
+
+**If WKWebViews are present:** Capture SDK `0.23.11+` provides experimental `WKWebView` instrumentation, enabled by default and able to be disabled remotely if needed. **$bd-docs:** look up `WKWebView integration manual instrumentation` for setup options.
 
 ### Screen views
 

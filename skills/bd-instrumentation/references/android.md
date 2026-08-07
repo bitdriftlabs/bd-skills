@@ -248,6 +248,8 @@ Instrument HTTP traffic automatically. **Always prefer the Gradle plugin auto-in
 
 **If auto-instrumentation can't be used** (e.g., no Gradle plugin, or the project needs a custom `EventListener.Factory`): Use manual instrumentation instead — read the **OkHttp > Manual Instrumentation** section from the same docs page. Add `CaptureOkHttpEventListenerFactory` to each `OkHttpClient.Builder`, and do NOT enable `automaticOkHttpInstrumentation` in the Gradle plugin.
 
+**For client-driven tracing:** Use `$bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **Android** network integration section to verify the required integration is configured. It covers both Gradle plugin auto-instrumentation and direct OkHttp integration.
+
 **If the project uses Retrofit with OkHttp:** Also read the **Using with Retrofit** section from the same docs page — it describes `RetrofitUrlPathProvider` for extracting endpoint URL paths from Retrofit service annotations, which improves the quality of network logs. Only relevant for manual instrumentation (auto-instrumentation handles this automatically).
 
 **If Apollo GraphQL is detected:**
