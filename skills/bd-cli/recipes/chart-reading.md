@@ -1,5 +1,20 @@
 # Reading Chart Data
 
+## MCP chart rendering (mandatory)
+
+For any request to inspect or display a workflow chart:
+
+1. Before using `bd workflow charts`, check whether `bd_inspect_workflow_charts` is exposed. If the host supports deferred/lazy tool discovery, use its discovery mechanism to search for the tool as well; otherwise continue to the fallback in step 4.
+2. If callable, use `bd_inspect_workflow_charts` as the primary operation, passing the requested workflow ID and identical scope (`last`, `since`/`until`, `app_ids`, `platforms`, `percentile`, `top_k`, `sort_order`). It fetches the data and renders the native Bitdrift MCP chart.
+3. Do not also call `bd workflow charts` after a successful MCP inspection unless raw CLI output is specifically needed for schema inspection or a fidelity check.
+4. Fall back to `bd workflow charts` only when tool discovery cannot resolve the MCP tool, the MCP call fails, or the needed raw detail is unavailable. State the fallback reason briefly.
+
+Example: “Fetch and display the chart for workflow `<WORKFLOW_ID>` over the last 30 days”
+→ First call: `bd_inspect_workflow_charts({workflow_id: "<WORKFLOW_ID>", last: "30d"})`
+→ Do not manually recreate the chart from CLI JSON.
+
+---
+
 Use `bd workflow charts <workflow_id>` to read metric data from any deployed workflow, including all 27 Instant Insights.
 
 Use `bd charts list` when you need to discover which charts exist before reading data from a
@@ -15,6 +30,7 @@ window can help — then read [chart-fidelity.md](./chart-fidelity.md) before dr
 Do not load it preemptively for clean grouped-chart reads.
 
 **Error handling:** Response `data[]` entries can contain an `error` string instead of chart data. Always check for `.error` before accessing `.line_data`:
+
 ```bash
 bd workflow charts <id> -o json --last 24h \
   --jq '[.data[] | select(.error) | {chart_id: .chart_id.workflow.chart_rule_id, error}]'
@@ -125,7 +141,13 @@ specific app, but it is not yet exposed via the CLI:
 
 ```json
 {
-  "charts": [{ "chart_id": { "workflow": { "workflow_id": "CXLl", "chart_rule_id": "..." } } }],
+  "charts": [
+    {
+      "chart_id": {
+        "workflow": { "workflow_id": "CXLl", "chart_rule_id": "..." }
+      }
+    }
+  ],
   "time_range": { "relative_time_range": { "duration": "86400s" } },
   "platform_filter": [
     { "android": { "apps": [{ "app_id": "com.example.myapp" }] } }
@@ -140,17 +162,17 @@ scoped to the target app via `platform_targets`, rather than an Instant Insight.
 
 Use `bd schema workflow.charts` to explore the full response shape. Key fields for jq:
 
-| Path | What it is |
-|---|---|
-| `data[]` | One entry per chart action (`metric_chart_rule` / `sankey_diagram_rule` / `funnel_rule`) |
-| `.chart_rule_id` | Matches the `rule_id` in the workflow proto |
-| `.line_data.time_series[]` | One series per grouped dimension; ungrouped = one series |
-| `.time_series[].data[].value` | Numeric, or `"NaN"` for empty buckets |
-| `.time_series[].aggregated_rollup` | Summary value for the whole query window (see chart-type notes below) |
-| `.time_series[].cardinality_overflows` | Overflow metadata for grouped series; check this before trusting the breakdown |
-| `.time_series[].labels[]` | Group-by dimension values |
-| `.time_series[].labels[] | select(.name == "percentile")` | Histogram percentile returned for that series when applicable |
-| `.aggregation_window` | Bucket size (e.g. `"900.000000000s"` = 15 min) |
+| Path                                   | What it is                                                                               |
+| -------------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `data[]`                               | One entry per chart action (`metric_chart_rule` / `sankey_diagram_rule` / `funnel_rule`) |
+| `.chart_rule_id`                       | Matches the `rule_id` in the workflow proto                                              |
+| `.line_data.time_series[]`             | One series per grouped dimension; ungrouped = one series                                 |
+| `.time_series[].data[].value`          | Numeric, or `"NaN"` for empty buckets                                                    |
+| `.time_series[].aggregated_rollup`     | Summary value for the whole query window (see chart-type notes below)                    |
+| `.time_series[].cardinality_overflows` | Overflow metadata for grouped series; check this before trusting the breakdown           |
+| `.time_series[].labels[]`              | Group-by dimension values                                                                |
+| `.time_series[].labels[]               | select(.name == "percentile")`                                                           | Histogram percentile returned for that series when applicable |
+| `.aggregation_window`                  | Bucket size (e.g. `"900.000000000s"` = 15 min)                                           |
 
 ## Answering strategy
 
@@ -213,10 +235,10 @@ When completeness matters, do a saturation check before claiming you have the fu
 The bucket size depends on the queried time range:
 
 | Time range | Aggregation window |
-|---|---|
-| < 4 hours | 1 minute |
-| 4–36 hours | 15 minutes |
-| > 36 hours | 2 hours |
+| ---------- | ------------------ |
+| < 4 hours  | 1 minute           |
+| 4–36 hours | 15 minutes         |
+| > 36 hours | 2 hours            |
 
 This affects Min/Max calculations and trend detection granularity. A 7-day query uses 2-hour buckets — short spikes may be smoothed out.
 
@@ -225,11 +247,13 @@ This affects Min/Max calculations and trend detection granularity. A 7-day query
 ## Interpreting Output by Chart Type
 
 ### Count
+
 One series per group-by dimension. `value` is the count in each bucket.
 `aggregated_rollup` is the total count across the whole query window for that series. For grouped
 count charts, summing `aggregated_rollup` across series gives the grand total volume.
 
 ### Rate
+
 One series per group-by dimension. `value` is the rate in each bucket. `aggregated_rollup` is the
 rolled-up rate for the entire query window, computed from the raw numerator and denominator counts
 across buckets.
@@ -239,6 +263,7 @@ of bucket values. Do **not** sum `aggregated_rollup` across series. If you need 
 rate, sum `.data[].rate_details.numerator_count` and `.data[].rate_details.denominator_count`.
 
 ### Histogram
+
 `value` is a percentile. `aggregated_rollup` is the same
 statistic computed over the entire query window (for example, a whole-window p95), not a total
 volume. Use this to report the percentile value over the whole time period.
@@ -291,16 +316,19 @@ bd workflow create /tmp/bytes-by-endpoint.json --deploy
 ```
 
 ### Table
+
 Returned when a count or rate chart has `group_by` and `table_display_mode` set. Data is in
 `.table_data.tables[]` with `rows[]` containing `group_column_values` and `aggregated_values`.
 `aggregated_values` follow the semantics of the backing chart: count totals for count charts,
 rolled-up rates for rate charts.
 
 ### Histogram Bar Chart
+
 Returned for histogram charts. Data is in `.histogram_bar_chart_response`, where the bar values
 represent counts per histogram bucket rather than a single rolled-up total.
 
 ### Sankey
+
 Data is in `.sankey_data` with `nodes[]` (each has `id` and `name`) and `links[]` (each has
 `source_node_id`, `target_node_id`, `value`). `value` is the path count for that edge.
 
@@ -311,6 +339,7 @@ bd workflow charts <id> -o json \
 ```
 
 ### Funnel
+
 Data is in `.funnel_data.steps[]` — each step has `id` (matches `match_id`) and `value` (session
 count reaching that step). Compare consecutive `value` fields to find drop-off points.
 
