@@ -111,6 +111,7 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Create or manage workflow alerts | [recipes/workflow-alerts.md](recipes/workflow-alerts.md) | Basic and SLO alerts on charts; multi-tier patterns; UI limitations; required values checklist |
 | Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Condition-based and notification alerts on crash/error issue groups |
 | Create or manage saved views | [recipes/views.md](recipes/views.md) | Saved filters over issue groups and workflows — list, create, update, delete views; find view IDs for alerts or filtered listing |
+| Manage teams or resource sharing | [recipes/teams-access-control.md](recipes/teams-access-control.md) | Team membership and consistent access control for workflows, views, and dashboards |
 | Manage API keys, SDK keys, connectors | [recipes/admin.md](recipes/admin.md) | Key creation, permissions, connector setup |
 | Write or debug a Ripsaw script for an IssueMatch step | [recipes/issue-match.md](recipes/issue-match.md) | Ripsaw scripting (formerly BDRL), compiler rules, crash metrics, issue field reference |
 | Start from a working Ripsaw script | [recipes/issue-match-examples.md](recipes/issue-match-examples.md) | 10 compiled and deployed IssueMatch programs |

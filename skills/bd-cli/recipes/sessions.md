@@ -81,7 +81,8 @@ Prefer this order:
 1. **Use the source context first** — issue reason, workflow trigger, captured-session `.fields`, or
    the symptom the user described
 2. **If you already know the event family, start with `timeline search`** — use the narrowest
-   reliable filter you already have (`--message`, `--log-type`, `--log-level`, `--field`)
+   reliable filter you already have (`--query` with a jq message filter, `--log-type`,
+   `--log-level`, `--field`)
 3. **If you do not have a hypothesis, inventory the session** — summarize messages or log types to
    see what families of logs are present
 4. **Then drill in** — inspect the relevant schema and refine with `--field` or `--request-file`
@@ -122,12 +123,15 @@ Output caps (`--max-results`, `--max-logs`) return a bounded slice, not the full
 repeated analysis, save to a file first; check `.total_pages` to know if you truncated.
 
 Use `--field key=value` for exact field matches and `--query` for broader contains-style search.
+To match an exact message, use `--query` to narrow the server-side search, then filter the JSONL
+results with jq. `--query` also searches nested field values, so the jq filter avoids false matches
+from fields with the same text.
 
 For OR across message families, run separate searches before reaching for `--request-file`.
 
 Timeline message names and OOTB condition names do not always match. Non-obvious mappings:
 
-| OOTB condition | `--message` value |
+| OOTB condition | Timeline message value |
 |---|---|
 | `NETWORK_REQUEST` / `NETWORK_RESPONSE` | `HTTPRequest` / `HTTPResponse` |
 | `APP_LAUNCH` | `AppCreate` (Android) or `AppFinishedLaunching` (iOS) |
@@ -139,7 +143,8 @@ To discover field keys on a candidate event, inspect the OOTB condition schema o
 inspect the payload:
 
 ```bash
-bd timeline search <session_id> --message HTTPResponse -o jsonl --jq '.log.fields | keys' 2>/dev/null
+bd timeline search <session_id> --query HTTPResponse -o jsonl \
+  --jq 'select(.log.message == "HTTPResponse") | .log.fields | keys' 2>/dev/null
 ```
 
 If the common flags are not expressive enough, switch to `--request-file`.
