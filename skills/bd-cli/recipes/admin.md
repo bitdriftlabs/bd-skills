@@ -1,6 +1,7 @@
 # Key & Connector Management
 
-Manage API keys, SDK keys, and external connectors via the `bd` CLI.
+Manage API keys, SDK keys, and external connectors via the `bd` CLI. For teams and sharing
+workflows, views, or dashboards, use [Teams and Access Control](teams-access-control.md).
 
 Start with:
 
