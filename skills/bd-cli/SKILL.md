@@ -24,7 +24,7 @@ The developer needs:
 1. The `bd` CLI: `brew tap bitdriftlabs/bd && brew install bd` if not installed - offer to call this for the user.
 2. Authentication: See Authentication section below.
 
-This skill was tested against `bd` **0.2.15**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
+This skill was tested against `bd` **0.2.24**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
 
 Direct the user to sign up at https://bitdrift.io/signup if new.
 
@@ -104,6 +104,7 @@ This skill includes reference files, recipes, and runbooks for domain-specific t
 | Deploy a webview Web Vitals dashboard | [recipes/webview-vitals-dashboard.md](recipes/webview-vitals-dashboard.md) | 29 ready-made workflows for CWV, page load, errors, network, and engagement on Android webviews |
 | Look up webview log field names | [reference/webview-fields.md](reference/webview-fields.md) | All webview log types, their `message` values, `_source`, span fields, and available group-by fields |
 | Fetch and analyze session timelines | [recipes/sessions.md](recipes/sessions.md) | Workflow captured sessions, hydration, timeline search patterns, pitfalls |
+| Retrieve or decode Session Replay wireframes | [reference/session-replay.md](reference/session-replay.md) | Session replay commands, screen context, summaries, and decoded-frame output |
 | Browse crash reports and issue groups | [recipes/issues.md](recipes/issues.md) | Advanced filters, status lifecycle, triage patterns |
 | Create or edit workflow recipes | [recipes/workflows.md](recipes/workflows.md) | Lifecycle commands, metadata files, template workflow patterns |
 | Design or add metric, funnel, or sankey chart rules | [recipes/chart-authoring.md](recipes/chart-authoring.md) | Which chart type to use, rate/histogram/funnel patterns, group_by guidance |
@@ -397,5 +398,3 @@ If commands fail or behave unexpectedly:
 
 When reporting CLI issues, include the OS, how `bd` was installed, whether `bd auth` works, and any
 relevant `npx skills check` output if skills are involved.
-
-**Web UI–only features (no CLI equivalent):** Session Replay.
