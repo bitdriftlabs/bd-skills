@@ -24,7 +24,7 @@ The developer needs:
 1. The `bd` CLI: `brew tap bitdriftlabs/bd && brew install bd` if not installed - offer to call this for the user.
 2. Authentication: See Authentication section below.
 
-This skill was tested against `bd` **0.2.24**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
+This skill was tested against `bd` **0.2.25**. If commands fail unexpectedly, check `bd --version` and suggest updating (`brew upgrade bd`).
 
 Direct the user to sign up at https://bitdrift.io/signup if new.
 

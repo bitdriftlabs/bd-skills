@@ -7,6 +7,20 @@ screen payload, and handles pagination.
 If the installed CLI does not list `timeline replay` or `replay decode`, update to a `bd` release
 that includes those commands.
 
+## MCP replay rendering (mandatory)
+
+For a request to inspect or display a single Session Replay frame:
+
+1. Before running `bd timeline replay`, check whether `bd_inspect_session_replay_frame` is exposed. If the host supports deferred or lazy tool discovery, search for it; otherwise continue to the fallback in step 4.
+2. If callable, use `bd_inspect_session_replay_frame` as the primary operation. Pass `session_id` to render the latest valid capture. To render a specific historical capture, also pass its `row_number`.
+3. Do not also call `bd timeline replay` after a successful MCP inspection unless decoded metadata is specifically needed. The CLI is appropriate before the MCP call when discovering the `row_number` for a particular historical frame.
+4. Fall back to `bd timeline replay` only when the MCP tool cannot be discovered, its call fails, or decoded CLI output is needed. State the fallback reason briefly.
+
+Examples:
+
+- “Display the latest replay frame for session `<SESSION_ID>`” → `bd_inspect_session_replay_frame({session_id: "<SESSION_ID>"})`
+- “Display the frame at timeline row 42 for session `<SESSION_ID>`” → first inspect `bd timeline replay <SESSION_ID> -o jsonl --frame-summary`, then call `bd_inspect_session_replay_frame({session_id: "<SESSION_ID>", row_number: 42})`
+
 ## Start with an aggregate
 
 For a compact view of a session's replay coverage, decoded geometry, and screen context:
