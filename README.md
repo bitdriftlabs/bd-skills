@@ -44,7 +44,8 @@ References: [Claude Code plugin docs](https://code.claude.com/docs/en/discover-p
 ## Dependencies
 
 The skills themselves are markdown files. To use the bitdrift platform from an agent, you will also
-need the [`bd` CLI](https://docs.bitdrift.io/cli/quickstart.html).
+need the [`bd` CLI](https://github.com/bitdriftlabs/bd-cli-releases/blob/main/README.md). Follow
+its README for the current supported distribution methods.
 
 To get started using the bitdrift platform, sign up [here](https://bitdrift.io/signup).
 
