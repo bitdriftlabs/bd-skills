@@ -1,14 +1,26 @@
 {
   "name": "bd-skills",
-  "owner": { "name": "bitdrift" },
-  "metadata": {
-    "description": "Agent skills for the bitdrift Capture mobile observability platform"
+  "owner": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
   },
+  "description": "First-party bitdrift agent skills for mobile and edge observability, production debugging, SDK instrumentation, and the bd CLI.",
   "plugins": [
     {
       "name": "bd",
-      "description": "SDK instrumentation and platform operations for bitdrift Capture",
-      "source": "./"
+      "displayName": "bitdrift",
+      "description": "Investigate mobile and edge production issues, instrument iOS/Android/React Native apps, and operate the bitdrift Capture platform from Claude Code.",
+      "source": "./",
+      "category": "developer-tools",
+      "tags": [
+        "mobile",
+        "observability",
+        "debugging",
+        "telemetry",
+        "cli"
+      ],
+      "homepage": "https://bitdrift.ai",
+      "repository": "https://github.com/bitdriftlabs/bd-skills"
     }
   ]
 }

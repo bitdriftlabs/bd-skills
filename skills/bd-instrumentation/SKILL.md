@@ -1,6 +1,7 @@
 ---
 name: bd-instrumentation
 description: "Mobile app instrumentation and Capture SDK setup for bitdrift in iOS, Android, and React Native apps, including new installs and extending existing integrations with screen tracking, network monitoring, logs, fields, and spans."
+license: PolyForm Shield License 1.0.0
 ---
 
 # bitdrift Instrumentation
