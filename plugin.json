@@ -1,23 +1,21 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "bd",
-  "description": "Agent skills for the bitdrift Capture mobile observability platform",
-  "version": "0.1.25",
+  "description": "Investigate mobile and edge production issues, instrument iOS/Android/React Native apps, and operate the bitdrift Capture platform.",
+  "version": "0.1.26",
   "author": {
-    "name": "bitdrift"
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
   },
-  "homepage": "https://github.com/bitdriftlabs/bd-skills",
+  "homepage": "https://bitdrift.ai",
   "repository": "https://github.com/bitdriftlabs/bd-skills",
   "license": "PolyForm Shield License 1.0.0",
   "keywords": [
     "bitdrift",
-    "copilot",
+    "mobile",
     "observability",
-    "mobile"
-  ],
-  "category": "developer-tools",
-  "tags": [
-    "skills",
-    "plugin"
-  ],
-  "skills": "./skills/"
+    "debugging",
+    "telemetry",
+    "cli"
+  ]
 }

@@ -1,6 +1,7 @@
 ---
 name: bd-cuj
 description: "Set up Critical User Journey (CUJ) monitoring in bitdrift. Deploys a complete observability stack: path discovery (sankey), conversion funnel, completion rate SLO, key step duration alerting, session capture, and a two-tab dashboard. Trigger when a user wants to monitor a journey end-to-end, track conversion and drop-off, measure step duration, or set up SLOs on a business-critical flow such as checkout, onboarding, login, or search."
+license: PolyForm Shield License 1.0.0
 ---
 
 # Critical User Journey (CUJ) Monitoring
