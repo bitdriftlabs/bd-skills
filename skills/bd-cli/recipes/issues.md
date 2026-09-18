@@ -51,6 +51,35 @@ bd schema issue.group.list AdvancedFilter --docs
 - **`REOPENED`** → a fix didn't hold; investigate what changed
 - **Single-platform** → check `platform` field; often platform-specific root causes
 
+### Occurrence trends
+
+Use `bd issue trend` after scoping the investigation to an app and platform when the question is
+**how the occurrence rate changed over time**. It returns one count per aggregation interval, so it
+is useful to confirm a suspected regression's onset, assess whether a release or rollback changed
+the rate, or distinguish a short spike from a sustained problem.
+
+For a known issue group, first find its ID with `bd issue group list`, then pass that ID as
+`issue_query.grouping_key` in a request file. `bd issue trend` has no positional group-ID argument:
+without this filter it trends every issue matching the app, platform, time, and other query filters.
+
+```bash
+printf '%s\n' '{
+  "issue_query": {
+    "grouping_key": ["<GROUP_ID>"]
+  }
+}' | bd issue trend --request-file - \
+  --app-id <BUNDLE_ID> --platform <PLATFORM> \
+  --last 24h --aggregation-window 1h
+```
+
+- Use a short range and small whole-minute window for a recent incident; widen both for release-to-release trends. If `--aggregation-window` is omitted, the server chooses one for the requested range.
+- Leave out `grouping_key` only when investigating total issue volume for the scoped app/platform. Use `--request-file` for a group key, feature-flag filters, or other advanced filters; inspect `bd schema issue.trend --docs` first for the current payload shape.
+- Use the trend to choose the next investigation step: inspect issues and sessions around the onset, or compare the change with a deploy, rollback, or flag rollout.
+
+The trend counts **occurrences**, not affected users or a root cause. Use `bd issue group list` to
+prioritize and compare groups, `bd issue list <group_id>` to inspect individual occurrences, and
+the attached session timeline to diagnose what happened.
+
 ### Trend comparison
 
 ```bash
