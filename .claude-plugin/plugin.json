@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "bd",
   "displayName": "bitdrift",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Investigate mobile and edge production issues, instrument iOS/Android/React Native apps, and operate the bitdrift Capture platform from Claude Code.",
   "author": {
     "name": "bitdrift",
