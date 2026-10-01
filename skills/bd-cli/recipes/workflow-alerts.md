@@ -36,8 +36,10 @@ Before creating alerts, confirm:
 **For basic alerts:** threshold value, threshold condition (above/below), time window,
 consecutive data points, unique devices affected, and optionally notification channels.
 
-**For SLO alerts:** SLO window (error budget period), SLO target (e.g. 99.9%), and optionally
-notification channels (global or per-burn-rate-window overrides).
+**For SLO alerts:** SLO window (error budget period), SLO target (e.g. 99.9%), whether the target
+is a success rate or a failure rate (see [Failure-rate SLOs](#failure-rate-slos) if the workflow
+only has a failure-count metric), and optionally notification channels (global or
+per-burn-rate-window overrides).
 
 If any required values are missing, prompt the user before proceeding.
 
@@ -211,6 +213,33 @@ bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <AGGREGATED_ACTION_ID> \
   --notification "group=SRE On-Call,min_interval=5m"
 ```
 
+### Failure-rate SLOs
+
+Some metrics are only tracked as failure counts (e.g. `video failure` / `video start` logs), with
+no first-class success-rate chart to alert on. Rather than manually converting the chart to a
+success rate, use `--slo-rate-type failure-rate` and enter the failure-rate threshold directly —
+`bd` converts it to a success-rate target internally.
+
+```bash
+bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <AGGREGATED_ACTION_ID> \
+  --name "Video Failure Rate SLO (2% / 30d)" \
+  --description "30-day SLO on video failure rate. MWMBR per Google SRE handbook." \
+  --type slo \
+  --slo-duration 30d \
+  --slo-target 0.02 \
+  --slo-rate-type failure-rate \
+  --slo-window "short=5m,long=1h,burn=16.8" \
+  --slo-window "short=30m,long=6h,burn=5.6" \
+  --slo-window "short=2h,long=24h,burn=2.8" \
+  --notification "group=SRE On-Call,min_interval=5m"
+```
+
+- `--slo-rate-type` defaults to `success-rate` when omitted — existing alerts and workflows are
+  unaffected.
+- `--slo-target` always uses the units of whatever `--slo-rate-type` is set: a success-rate
+  target near 1.0 (e.g. `0.999`), or a failure-rate target near 0.0 (e.g. `0.02`). Confirm which
+  mode you're in before entering the number — nothing about the flag itself flags a mismatch.
+
 ### Per-window notification overrides
 
 Route different burn rates to different channels (e.g. fast-burn pages on-call, slow-burn goes
@@ -273,6 +302,11 @@ Once you have a workflow ID:
 
 - **Threshold units:** Rate charts display percentages but alert thresholds use raw decimals.
   0.05 = 5%, not 0.05%.
+- **`--slo-target` means different things depending on `--slo-rate-type`:** under the default
+  `success-rate`, it's the desired success rate (near 1.0); under `failure-rate`, it's the
+  maximum acceptable failure rate (near 0.0). Double-check both flags together — entering a
+  success-rate-shaped number (e.g. `0.99`) while `--slo-rate-type failure-rate` is set silently
+  creates an SLO with a 1% success-rate target instead of the intended 99%.
 - **SLO + group_by incompatibility:** If you need both version-level breakdown and SLO alerting,
   create two separate workflows — one grouped for visibility, one ungrouped for the SLO.
 - **Notification groups must exist first.** If you reference a group name that doesn't exist,

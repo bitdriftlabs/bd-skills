@@ -64,6 +64,11 @@ bd workflow alert upsert {{COMPLETION_RATE_WORKFLOW_ID}} {{CHART_RULE_ID}} {{AGG
 
 `--slo-duration` only accepts `7d` or `30d`. `--slo-target` is a decimal (0.90 = 90%).
 
+If the completion rate workflow only has a failure-count metric (no success-rate chart), use
+`--slo-rate-type failure-rate` and enter the failure-rate target directly instead of computing
+`1 - rate` by hand — see [Failure-rate SLOs](../../bd-cli/recipes/workflow-alerts.md#failure-rate-slos)
+in the workflow-alerts recipe.
+
 ---
 
 ## Alert 2: Key Step p95
