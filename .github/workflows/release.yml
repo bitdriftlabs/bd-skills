@@ -76,4 +76,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_VERSION: ${{ steps.version.outputs.value }}
         run: |
-          gh skill publish --tag "v$RELEASE_VERSION"
+          gh skill publish --dry-run
+          gh repo edit "$GITHUB_REPOSITORY" --add-topic agent-skills || true
+          gh release create "v$RELEASE_VERSION" --target "$GITHUB_SHA" --generate-notes
