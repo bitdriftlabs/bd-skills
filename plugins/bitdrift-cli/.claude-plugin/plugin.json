@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "bitdrift-cli",
+  "displayName": "bitdrift CLI",
+  "version": "0.2.0",
+  "description": "Operate the bitdrift Capture platform with the bd CLI: investigate crashes, sessions, and app health, author workflows and dashboards, and set up Critical User Journey monitoring.",
+  "author": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
+  },
+  "homepage": "https://bitdrift.ai",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "mobile",
+    "observability",
+    "debugging",
+    "telemetry",
+    "cli"
+  ]
+}

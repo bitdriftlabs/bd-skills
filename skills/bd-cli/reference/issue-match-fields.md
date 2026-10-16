@@ -3,7 +3,7 @@
 Field reference for the `Report` object passed to the Ripsaw `program` in an IssueMatch step.
 
 > **Authoritative sources — check both:**
-> - Structure definitions: `$bd-docs` → `product/workflows/scripting/structures.md` (the `Report` type and everything it nests)
+> - Structure definitions: `https://docs.bitdrift.io/product/workflows/scripting/structures.md` (the `Report` type and everything it nests)
 > - Live request shape: `bd schema workflow.create IssueMatch --depth 5`
 >
 > This file provides interpretation and usage notes on top of those.

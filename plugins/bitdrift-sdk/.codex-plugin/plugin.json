@@ -1,0 +1,36 @@
+{
+  "name": "bitdrift-sdk",
+  "version": "0.2.0",
+  "description": "Instrument iOS, Android, and React Native apps with the bitdrift Capture SDK, and look up bitdrift documentation.",
+  "author": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
+  },
+  "homepage": "https://bitdrift.ai",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "mobile",
+    "observability",
+    "instrumentation",
+    "ios",
+    "android",
+    "react-native"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "bitdrift SDK",
+    "shortDescription": "Add the bitdrift Capture SDK to your app",
+    "longDescription": "Instrument iOS, Android, and React Native apps with the bitdrift Capture SDK, and look up bitdrift documentation.",
+    "developerName": "bitdrift",
+    "category": "Coding",
+    "brandColor": "#4A4797",
+    "composerIcon": "./assets/bitdrift.svg",
+    "logo": "./assets/bitdrift.svg",
+    "logoDark": "./assets/bitdrift.svg",
+    "defaultPrompt": [
+      "Add the bitdrift Capture SDK to this app"
+    ]
+  }
+}

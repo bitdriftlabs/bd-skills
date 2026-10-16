@@ -1,0 +1,35 @@
+{
+  "name": "bitdrift-cli",
+  "version": "0.2.0",
+  "description": "Operate the bitdrift Capture platform with the bd CLI: investigate crashes, sessions, and app health, author workflows and dashboards, and set up Critical User Journey monitoring.",
+  "author": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
+  },
+  "homepage": "https://bitdrift.ai",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "mobile",
+    "observability",
+    "debugging",
+    "telemetry",
+    "cli"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "bitdrift CLI",
+    "shortDescription": "Investigate production issues with the bd CLI",
+    "longDescription": "Operate the bitdrift Capture platform with the bd CLI: investigate crashes, sessions, and app health, author workflows and dashboards, and set up Critical User Journey monitoring.",
+    "developerName": "bitdrift",
+    "category": "Coding",
+    "brandColor": "#4A4797",
+    "composerIcon": "./assets/bitdrift.svg",
+    "logo": "./assets/bitdrift.svg",
+    "logoDark": "./assets/bitdrift.svg",
+    "defaultPrompt": [
+      "Why did crashes spike in my iOS app yesterday?"
+    ]
+  }
+}

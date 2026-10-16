@@ -6,8 +6,8 @@ license: PolyForm Shield License 1.0.0
 
 # Critical User Journey (CUJ) Monitoring
 
-> For CLI usage, workflow creation, and alert syntax, see $bd-cli.
-> For SDK integration and instrumentation, see $bd-instrumentation.
+> For CLI usage, workflow creation, and alert syntax, see the `bd-cli` skill.
+> For SDK integration and instrumentation, use the `bd-instrumentation` skill if available; it ships separately in the `bitdrift-sdk` plugin.
 
 This skill is a guided, interactive setup. Work through phases in order, loading reference files on demand as each phase begins.
 

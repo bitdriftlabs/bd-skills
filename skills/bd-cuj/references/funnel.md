@@ -1,6 +1,6 @@
 # Phase 2: Funnel
 
-> For workflow creation syntax, match type reference, and `--chart-metadata-file` usage, see the workflows recipe in `$bd-cli`.
+> For workflow creation, run `bd guides read workflow-authoring`; for match types, inspect `bd schema workflow.create`; for `--chart-metadata-file`, run `bd guides read chart-authoring`.
 
 This phase deploys two workflows:
 

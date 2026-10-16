@@ -1,6 +1,6 @@
 # Phase 3: Network
 
-> For workflow creation syntax and `--chart-metadata-file` usage, see the workflows recipe in `$bd-cli`.
+> For workflow creation, run `bd guides read workflow-authoring`; for `--chart-metadata-file`, run `bd guides read chart-authoring`.
 
 If the user skipped network scope in Phase 0, skip this phase entirely and proceed to Phase 4.
 

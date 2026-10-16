@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bitdrift": {
+      "type": "http",
+      "url": "https://mcp.bitdrift.ai/"
+    }
+  }
+}

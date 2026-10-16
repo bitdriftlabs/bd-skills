@@ -1,16 +1,16 @@
 {
-  "name": "bd-skills",
+  "name": "bitdrift",
   "owner": {
     "name": "bitdrift",
     "url": "https://bitdrift.io"
   },
-  "description": "First-party bitdrift agent skills for mobile and edge observability, production debugging, SDK instrumentation, and the bd CLI.",
+  "description": "First-party bitdrift plugins for mobile and edge observability: the bd CLI, Capture SDK instrumentation, and the hosted MCP server.",
   "plugins": [
     {
-      "name": "bd",
-      "displayName": "bitdrift",
-      "description": "Investigate mobile and edge production issues, instrument iOS/Android/React Native apps, and operate the bitdrift Capture platform from Claude Code.",
-      "source": "./",
+      "name": "bitdrift-cli",
+      "displayName": "bitdrift CLI",
+      "description": "Operate the bitdrift Capture platform with the bd CLI: investigate crashes, sessions, and app health, author workflows and dashboards, and set up Critical User Journey monitoring.",
+      "source": "./plugins/bitdrift-cli",
       "category": "developer-tools",
       "tags": [
         "mobile",
@@ -18,6 +18,36 @@
         "debugging",
         "telemetry",
         "cli"
+      ],
+      "homepage": "https://bitdrift.ai",
+      "repository": "https://github.com/bitdriftlabs/bd-skills"
+    },
+    {
+      "name": "bitdrift-sdk",
+      "displayName": "bitdrift SDK",
+      "description": "Instrument iOS, Android, and React Native apps with the bitdrift Capture SDK, and look up bitdrift documentation.",
+      "source": "./plugins/bitdrift-sdk",
+      "category": "developer-tools",
+      "tags": [
+        "mobile",
+        "observability",
+        "instrumentation",
+        "ios",
+        "android",
+        "react-native"
+      ],
+      "homepage": "https://bitdrift.ai",
+      "repository": "https://github.com/bitdriftlabs/bd-skills"
+    },
+    {
+      "name": "bitdrift-mcp",
+      "displayName": "bitdrift MCP",
+      "description": "Connect to bitdrift through its hosted MCP server. Sign in to bitdrift when connecting.",
+      "source": "./plugins/bitdrift-mcp",
+      "category": "developer-tools",
+      "tags": [
+        "mcp",
+        "observability"
       ],
       "homepage": "https://bitdrift.ai",
       "repository": "https://github.com/bitdriftlabs/bd-skills"

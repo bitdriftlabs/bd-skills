@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "bitdrift-sdk",
+  "displayName": "bitdrift SDK",
+  "version": "0.2.0",
+  "description": "Instrument iOS, Android, and React Native apps with the bitdrift Capture SDK, and look up bitdrift documentation.",
+  "author": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
+  },
+  "homepage": "https://bitdrift.ai",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "mobile",
+    "observability",
+    "instrumentation",
+    "ios",
+    "android",
+    "react-native"
+  ]
+}

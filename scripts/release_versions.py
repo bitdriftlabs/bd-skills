@@ -33,14 +33,26 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+MANIFEST_NAMES = (
+    Path("plugin.json"),
+    Path(".claude-plugin") / "plugin.json",
+    Path(".codex-plugin") / "plugin.json",
+)
+
+
+def discover_plugin_roots(repo_root: Path) -> list[Path]:
+    plugins_root = repo_root / "plugins"
+    if not plugins_root.is_dir():
+        return []
+    return [path for path in sorted(plugins_root.iterdir()) if path.is_dir()]
+
+
 def discover_manifest_paths(repo_root: Path) -> list[Path]:
     paths = [
-        path
-        for path in (
-            repo_root / "plugin.json",
-            repo_root / ".claude-plugin" / "plugin.json",
-        )
-        if path.exists()
+        plugin_root / name
+        for plugin_root in discover_plugin_roots(repo_root)
+        for name in MANIFEST_NAMES
+        if (plugin_root / name).exists()
     ]
     if not paths:
         raise SystemExit("No managed version manifest was found.")
@@ -48,11 +60,13 @@ def discover_manifest_paths(repo_root: Path) -> list[Path]:
 
 
 def discover_skill_version_paths(repo_root: Path) -> list[Path]:
-    skills_root = repo_root / "skills"
-    if not skills_root.is_dir():
-        return []
+    # Canonical skills live in skills/; each plugin carries a copy under plugins/*/skills/.
+    skills_roots = [repo_root / "skills"]
+    skills_roots += [plugin_root / "skills" for plugin_root in discover_plugin_roots(repo_root)]
     return [
         skill_dir / "VERSION"
+        for skills_root in skills_roots
+        if skills_root.is_dir()
         for skill_dir in sorted(skills_root.iterdir())
         if skill_dir.is_dir() and (skill_dir / "SKILL.md").exists()
     ]

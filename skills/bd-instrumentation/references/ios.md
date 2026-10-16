@@ -1,6 +1,6 @@
 # iOS (Swift/Objective-C) Integration
 
-This file provides the workflow and placement guidance. For exact API signatures and code examples, use $bd-docs to look up the relevant topic at each step.
+This file provides the workflow and placement guidance. For exact API signatures and code examples, use `bd-docs` to look up the relevant topic at each step.
 
 ---
 
@@ -67,14 +67,14 @@ Detect the dependency manager by checking the project root:
 
 Then fetch the matching installation instructions and find the latest version:
 
-- **SPM detected →** **$bd-docs:** look up `iOS quickstart SPM swift package`
+- **SPM detected →** **`bd-docs`:** look up `iOS quickstart SPM swift package`
   - **Latest version:** Fetch the current release tag:
     ```bash
     curl -s "https://api.github.com/repos/bitdriftlabs/capture-ios/releases/latest"
     ```
     Read `tag_name` from the JSON response — this is the version to use when setting the package dependency rule (e.g., "Up to Next Major Version").
 
-- **CocoaPods detected →** **$bd-docs:** look up `iOS quickstart CocoaPods pod`
+- **CocoaPods detected →** **`bd-docs`:** look up `iOS quickstart CocoaPods pod`
   - **Latest version:** Fetch the current release tag:
     ```bash
     curl -s "https://api.github.com/repos/bitdriftlabs/capture-ios/releases/latest"
@@ -100,7 +100,7 @@ Then fetch the matching installation instructions and find the latest version:
 
 Add the SDK import and call `Logger.start()` at app launch. Start with a **fixed session strategy** — new session every launch for easy verification.
 
-**$bd-docs:** look up `Logger.start session strategy configuration`
+**`bd-docs`:** look up `Logger.start session strategy configuration`
 
 **SDK API Key Management:**
 **IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control, such as CI/CD-injected build settings, non-committed `.xcconfig` files, or generated source files created at build time.
@@ -147,8 +147,8 @@ xcrun simctl spawn booted log stream --predicate 'subsystem CONTAINS "bd_"' --le
 
 Once you see the session ID log, the SDK is running. Offer the user two options to confirm the session reached the backend:
 
-1. **Open in browser** — use $bd-cli: `bd timeline open <session_id>` (opens the session in the bitdrift web UI)
-2. **Inspect from CLI** — use $bd-cli: `bd timeline logs <session_id>` (fetches the session timeline directly)
+1. **Open in browser** — with the `bd` CLI: `bd timeline open <session_id>` (opens the session in the bitdrift web UI)
+2. **Inspect from CLI** — with the `bd` CLI: `bd timeline logs <session_id>` (fetches the session timeline directly)
 
 Extract the session ID from the `bd_session::fixed` or `bd_session::activity_based` log line. Either option confirms end-to-end connectivity.
 
@@ -186,7 +186,7 @@ Forward existing logs from CocoaLumberjack, SwiftyBeaver, or custom wrappers to 
 | `import CocoaLumberjack`, `import CocoaLumberjackSwift`, `DDLog`, pod `CocoaLumberjack` in Podfile, or `CocoaLumberjack` SPM package | **CocoaLumberjack** |
 | `import SwiftyBeaver`, `SwiftyBeaver` in Podfile or SPM packages | **SwiftyBeaver** |
 
-**$bd-docs:** look up `CocoaLumberjack SwiftyBeaver integrations log forwarding`
+**`bd-docs`:** look up `CocoaLumberjack SwiftyBeaver integrations log forwarding`
 
 **If CocoaLumberjack is detected:**
 
@@ -234,25 +234,25 @@ Preserving level semantics keeps bitdrift workflows and filters meaningful — a
 
 Instrument URLSession for automatic HTTP traffic capture.
 
-**$bd-docs:** look up `URLSession network http instrumentation`
+**`bd-docs`:** look up `URLSession network http instrumentation`
 
 - **With swizzling (default):** `.enableIntegrations([.urlSession()])` — instruments all URLSession instances automatically
 - **Without swizzling:** `.enableIntegrations([.urlSession()], disableSwizzling: true)` then create sessions using `URLSession(instrumentedSessionWithConfiguration:delegate:delegateQueue:)`
 - Alamofire wraps URLSession, so swizzling covers it
 
-**For client-driven tracing:** Use `$bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **iOS** network integration section to verify the required integration is configured.
+**For client-driven tracing:** Use `bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **iOS** network integration section to verify the required integration is configured.
 
 **Verify:** Trigger a network request and confirm HTTP events appear in the timeline.
 
 ### WKWebView monitoring
 
-**If WKWebViews are present:** Capture SDK `0.23.11+` provides experimental `WKWebView` instrumentation, enabled by default and able to be disabled remotely if needed. **$bd-docs:** look up `WKWebView integration manual instrumentation` for setup options.
+**If WKWebViews are present:** Capture SDK `0.23.11+` provides experimental `WKWebView` instrumentation, enabled by default and able to be disabled remotely if needed. **`bd-docs`:** look up `WKWebView integration manual instrumentation` for setup options.
 
 ### Screen views
 
 Track navigation to power Sankey diagrams, funnels, and user journeys.
 
-**$bd-docs:** look up `screen view automatic instrumentation`
+**`bd-docs`:** look up `screen view automatic instrumentation`
 
 - **UIKit:** Call `Logger.logScreenView(screenName:)` in `viewDidAppear(_:)` of each view controller
 - **SwiftUI:** Use `.onAppear { Logger.logScreenView(screenName: "ScreenName") }`
@@ -265,7 +265,7 @@ Track navigation to power Sankey diagrams, funnels, and user journeys.
 
 Record how long the app takes to become interactive after a cold launch.
 
-**$bd-docs:** look up `TTI app launch time interactive`
+**`bd-docs`:** look up `TTI app launch time interactive`
 
 - Record start time at `Logger.start()` call
 - Call `Logger.logAppLaunchTTI(duration)` once when the app becomes interactive
@@ -276,7 +276,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 ### Entity ID
 
-**$bd-docs:** look up `entity id setEntityID`
+**`bd-docs`:** look up `entity id setEntityID`
 
 - Call `Logger.setEntityID(entityId)` after login or session restore
 - Objective-C: `[CAPLogger setEntityID:@"user-id"]`
@@ -289,7 +289,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 Attach metadata to all subsequent logs — account type, subscription tier, experiment variants, app region, etc. These appear as filterable fields on log lines and are independent of entity ID.
 
-**$bd-docs:** look up `fields addField`
+**`bd-docs`:** look up `fields addField`
 
 - `Logger.addField(withKey: "account_type", value: "premium")` after login
 - On logout or account switch, set updated values (fields are overwritten by key)
@@ -299,7 +299,7 @@ Attach metadata to all subsequent logs — account type, subscription tier, expe
 
 Instrument discrete operations with start/end timing (API calls, rendering, checkout flow).
 
-**$bd-docs:** look up `spans startSpan`
+**`bd-docs`:** look up `spans startSpan`
 
 - `Logger.startSpan(name:level:fields:)` / `span?.end(.success)`
 - Use `defer` to ensure spans are always ended in error paths
@@ -308,13 +308,13 @@ Instrument discrete operations with start/end timing (API calls, rendering, chec
 
 Record which variant a user sees at the moment of divergence.
 
-**$bd-docs:** look up `feature flag exposure`
+**`bd-docs`:** look up `feature flag exposure`
 
 - Record at the **moment of divergence** — when the flag value affects what the user sees
 
 ### dSYM upload
 
-**$bd-docs:** look up `dSYM symbolication debug symbols`
+**`bd-docs`:** look up `dSYM symbolication debug symbols`
 
 - Configure a build phase script or use `bd debug-files upload` in CI
 

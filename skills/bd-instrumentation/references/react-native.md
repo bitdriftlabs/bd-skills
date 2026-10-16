@@ -1,6 +1,6 @@
 # React Native Integration
 
-This file provides the workflow and placement guidance. For exact API signatures and code examples, use $bd-docs to look up the relevant topic at each step.
+This file provides the workflow and placement guidance. For exact API signatures and code examples, use `bd-docs` to look up the relevant topic at each step.
 
 ---
 
@@ -16,7 +16,7 @@ Ask the user for their bitdrift SDK key (found in the bitdrift portal under Comp
 
 Install the npm package and native dependencies.
 
-**$bd-docs:** look up `react native quickstart install`
+**`bd-docs`:** look up `react native quickstart install`
 
 **Placement tips:**
 - `npm install @bitdrift/react-native` (or yarn)
@@ -30,7 +30,7 @@ Install the npm package and native dependencies.
 
 Call `init()` as early as possible. Start with a **fixed session strategy** — new session every launch for easy verification.
 
-**$bd-docs:** look up `session strategy configuration init`
+**`bd-docs`:** look up `session strategy configuration init`
 
 **SDK API Key Management:**
 **IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control (usually via ENV variables or compile-time configuration files.)
@@ -63,7 +63,7 @@ Forward existing logging to bitdrift.
 
 Add network request instrumentation.
 
-**$bd-docs:** look up `network http instrumentation`
+**`bd-docs`:** look up `network http instrumentation`
 
 - Check the docs for RN-specific network instrumentation
 - If the docs don't cover automatic RN network capture, use the manual HTTP logging API from `sdk/features/http-traffic-logs.md` — wrap `fetch` or use an interceptor library
@@ -74,7 +74,7 @@ Add network request instrumentation.
 
 Track navigation to power Sankey diagrams, funnels, and user journeys.
 
-**$bd-docs:** look up `screen view automatic instrumentation`
+**`bd-docs`:** look up `screen view automatic instrumentation`
 
 - `import { logScreenView } from '@bitdrift/react-native'`
 - **React Navigation:** Use `onStateChange` on `NavigationContainer` to detect screen changes and call `logScreenView(routeName)`
@@ -87,7 +87,7 @@ Track navigation to power Sankey diagrams, funnels, and user journeys.
 
 Record how long the app takes to become interactive after a cold launch.
 
-**$bd-docs:** look up `TTI app launch time interactive`
+**`bd-docs`:** look up `TTI app launch time interactive`
 
 - `import { logAppLaunchTTI } from '@bitdrift/react-native'`
 - Record start time at module load, call `logAppLaunchTTI(durationMs)` when the first screen is interactive
@@ -98,7 +98,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 ### Entity ID
 
-**$bd-docs:** look up `entity id setEntityId`
+**`bd-docs`:** look up `entity id setEntityId`
 
 - `import { setEntityId } from '@bitdrift/react-native'`
 - Call `setEntityId(entityId)` after login or session restore
@@ -111,7 +111,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 Attach metadata to all subsequent logs (user ID, account type, experiment variants). These are separate from entity ID — they appear as filterable fields on log lines.
 
-**$bd-docs:** look up `fields addField`
+**`bd-docs`:** look up `fields addField`
 
 - `addField("user_id", userId)` after login
 - On logout or account switch, set updated values (fields are overwritten by key)
@@ -121,7 +121,7 @@ Attach metadata to all subsequent logs (user ID, account type, experiment varian
 
 Instrument discrete operations with start/end timing.
 
-**$bd-docs:** look up `spans startSpan`
+**`bd-docs`:** look up `spans startSpan`
 
 - Start/end spans around discrete operations
 
@@ -129,7 +129,7 @@ Instrument discrete operations with start/end timing.
 
 Record which variant a user sees at the moment of divergence.
 
-**$bd-docs:** look up `feature flag exposure`
+**`bd-docs`:** look up `feature flag exposure`
 
 - Record at the **moment of divergence** — when the flag value affects what the user sees
 
@@ -137,7 +137,7 @@ Record which variant a user sees at the moment of divergence.
 
 Link bitdrift session context to your crash reporter.
 
-**$bd-docs:** look up `crash fatal issues session linking`
+**`bd-docs`:** look up `crash fatal issues session linking`
 
 - Pass `getSessionUrl()` to your crash reporter as a custom key
 

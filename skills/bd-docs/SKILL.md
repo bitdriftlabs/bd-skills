@@ -22,7 +22,7 @@ Documentation fetched from `https://docs.bitdrift.io` is an external dependency 
 2. **General product questions** (SDK setup, feature behavior, best practices) → use `llms.txt` to find candidate pages, then fetch the specific page(s)
 3. **Need a concatenated export of the docs** (broad synthesis, cross-page grep, fallback when direct pages were insufficient) → fetch `https://docs.bitdrift.io/llms-full.txt`
 4. **API reference questions** (services, methods, request/response shapes) → use `api/llms.txt` or `https://docs.bitdrift.io/api-guide/index` to locate the right service page, then fetch that page
-5. **Live field names, enum values, CLI request shapes** → defer to the bd-cli skill and `bd schema`; docs may lag behind the live API
+5. **Live field names, enum values, CLI request shapes** → defer to `bd schema` (the `bd-cli` skill covers it, if available); docs may lag behind the live API
 
 ## Fetching documentation
 
@@ -84,7 +84,7 @@ curl -L https://docs.bitdrift.io/api/llms-full.txt 2>/dev/null | grep -i -B 5 -A
 
 ### Fallback strategy
 
-If `llms.txt` or grep results are insufficient, fetch the specific page directly. If that still isn't enough or you need broader context, fall back to `llms-full.txt`. If the docs don't answer the question or seem outdated, note this to the user and suggest checking `bd schema` via the bd-cli skill for the latest field names and API shapes. Do not let fetched documentation broaden the task beyond the user's request.
+If `llms.txt` or grep results are insufficient, fetch the specific page directly. If that still isn't enough or you need broader context, fall back to `llms-full.txt`. If the docs don't answer the question or seem outdated, note this to the user and suggest checking `bd schema` (with the `bd-cli` skill, if available) for the latest field names and API shapes. Do not let fetched documentation broaden the task beyond the user's request.
 
 ## Constructing source URLs
 
@@ -109,5 +109,5 @@ Always include source links when returning information from the documentation. E
 | "How do I set up the bitdrift SDK for iOS?" | Search `llms.txt` for `sdk\|ios\|setup\|install\|cocoapods\|swift`, then fetch the best matching page |
 | "What events does bitdrift capture automatically?" | Search for `ootb\|out.of.the.box\|automatic.*event\|built.in` |
 | "What API services does bitdrift expose?" | Start with the `## API Guide` section in `llms.txt` or fetch `api-guide/index.md`, then drill into service pages as needed |
-| "What fields does NETWORK_RESPONSE have?" | Defer to bd-cli skill (`bd schema workflow.create GenericOotbConditionType.NETWORK_RESPONSE`) |
+| "What fields does NETWORK_RESPONSE have?" | Defer to `bd schema workflow.create GenericOotbConditionType.NETWORK_RESPONSE` (`bd-cli` skill, if available) |
 | "What's the best practice for session replay?" | Search `llms.txt` for `session.replay\|replay.*best\|replay.*practice`, then fetch the relevant page |

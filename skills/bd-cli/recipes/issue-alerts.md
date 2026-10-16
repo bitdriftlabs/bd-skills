@@ -171,9 +171,9 @@ bd issue alert upsert <VIEW_ID> \
 
 ## Workflow: Creating Issue Alerts
 
-1. **Get or create the Issue View.** Views can be managed via `bd view` — see
-   [recipes/views.md](./views.md) for how to list existing views, find a view ID, or create a new
-   one. If the view already has alerts, you can also discover its ID from:
+1. **Get or create the Issue View.** List or create issue-group views with `bd view list
+   --service-type issue-group` or `bd view create --filter-mode issue-group-query` (see
+   `bd view --help`). If the view already has alerts, you can also discover its ID from:
    ```bash
    bd issue alert list --all -o json --jq '[.items[] | {view_id, view_name}]'
    ```
