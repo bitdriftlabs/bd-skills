@@ -1,0 +1,32 @@
+{
+  "name": "bitdrift-mcp",
+  "version": "0.2.0",
+  "description": "Connect to bitdrift through its hosted MCP server. Sign in to bitdrift when connecting.",
+  "author": {
+    "name": "bitdrift",
+    "url": "https://bitdrift.io"
+  },
+  "homepage": "https://bitdrift.ai",
+  "repository": "https://github.com/bitdriftlabs/bd-skills",
+  "license": "PolyForm Shield License 1.0.0",
+  "keywords": [
+    "bitdrift",
+    "mcp",
+    "observability"
+  ],
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "bitdrift MCP",
+    "shortDescription": "Connect to bitdrift",
+    "longDescription": "Connect to bitdrift through its hosted MCP server. Sign in to bitdrift when connecting.",
+    "developerName": "bitdrift",
+    "category": "Productivity",
+    "brandColor": "#4A4797",
+    "composerIcon": "./assets/bitdrift.svg",
+    "logo": "./assets/bitdrift.svg",
+    "logoDark": "./assets/bitdrift.svg",
+    "defaultPrompt": [
+      "Which issues are trending in my app this week?"
+    ]
+  }
+}

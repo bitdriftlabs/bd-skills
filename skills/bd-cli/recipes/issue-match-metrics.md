@@ -2,7 +2,7 @@
 
 Recipes for emitting chart fields via `add_field` in IssueMatch Ripsaw scripts, for use with Plot Chart actions.
 
-> Fetch the live function reference before writing — use `$bd-docs` to fetch `product/workflows/scripting/functions.md`, and `product/workflows/scripting/structures.md` for report field names.
+> Fetch the live function reference before writing — fetch `https://docs.bitdrift.io/product/workflows/scripting/functions.md`, and `https://docs.bitdrift.io/product/workflows/scripting/structures.md` for report field names.
 
 ---
 

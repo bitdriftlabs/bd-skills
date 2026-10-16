@@ -54,7 +54,7 @@ The dashboard uses a 12-column grid. Every chart requires `x`, `y`, `column_span
 
 Set readable series labels via `--chart-metadata-file` when creating the workflow, or update after deploy. For the CUJ dashboard the relevant rules are `completion_rate` (one rate series) and `histogram_key_step` (one histogram series — the platform appends the percentile, so title `"{{KEY_STEP_NAME}} Duration"` renders as `"{{KEY_STEP_NAME}} Duration: P50"` etc.).
 
-See the workflows recipe in `$bd-cli` for the `--chart-metadata-file` format.
+Run `bd guides read chart-authoring` for the `--chart-metadata-file` format.
 
 ---
 

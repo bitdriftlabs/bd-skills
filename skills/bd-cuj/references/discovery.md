@@ -11,7 +11,7 @@ Ask the user:
 > "Is the app already instrumented with the bitdrift SDK — does it call `Logger.start()` (iOS/Android) or `Capture.start()` (React Native)?"
 
 - **Yes** → continue.
-- **No or unsure** → stop and say: "Let's get the SDK set up first — I can walk you through that with `$bd-instrumentation`."
+- **No or unsure** → stop and say: "Let's get the SDK set up first." Walk them through setup with the `bd-instrumentation` skill, if available; otherwise point them to the `bitdrift-sdk` plugin or the SDK quickstart on docs.bitdrift.io.
 
 ---
 

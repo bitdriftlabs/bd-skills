@@ -1,6 +1,6 @@
 # Phase 1: Sankey
 
-> For workflow creation syntax and `--chart-metadata-file` usage, see the workflows recipe in `$bd-cli`.
+> For workflow creation, run `bd guides read workflow-authoring`; for `--chart-metadata-file`, run `bd guides read chart-authoring`.
 
 A sankey shows all paths users take between the journey's start and end. Deploy it first — it reveals whether the expected golden path matches actual user behaviour before you commit to a funnel.
 

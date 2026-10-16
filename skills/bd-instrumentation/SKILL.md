@@ -10,7 +10,7 @@ Guides integration of the bitdrift Capture SDK into mobile apps. The SDK logs ev
 
 ## How this skill uses docs
 
-Use $bd-docs to fetch live API details from docs.bitdrift.io at each step. The platform reference files indicate what to look up — $bd-docs handles the mechanics of discovery and fetching.
+Use `bd-docs` to fetch live API details from docs.bitdrift.io at each step. The platform reference files indicate what to look up — `bd-docs` handles the mechanics of discovery and fetching.
 
 ## Workflow summary
 

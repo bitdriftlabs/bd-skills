@@ -15,7 +15,7 @@ types: **basic** and **SLO**.
 Before creating alerts, confirm:
 
 1. **A deployed workflow with a metric chart action exists.** If not, create and deploy one first
-   (see [workflows.md](./workflows.md)).
+   (`bd guides read workflow-authoring`).
 2. **You have the workflow ID, chart rule ID, and aggregated action ID.** Extract them:
    ```bash
    bd workflow describe <WORKFLOW_ID> -o json --jq '.workflow.actions[] | {
@@ -256,7 +256,7 @@ Once you have a workflow ID:
 
 ## Workflow: Creating a New Workflow + Alerts
 
-1. **Create and deploy the workflow** (see [workflows.md](./workflows.md)).
+1. **Create and deploy the workflow** (`bd guides read workflow-authoring`).
 2. **Wait for deployment** — **never attempt to attach an alert until the workflow status is `LIVE`.** Attaching to a non-live workflow will fail.
 3. **Extract IDs** from the deployed workflow:
    ```bash
@@ -266,6 +266,43 @@ Once you have a workflow ID:
    ```
 4. **Confirm required values with the user.**
 5. **Create the alert(s).**
+
+---
+
+## Workflow: Editing a Workflow with Active Alerts
+
+An active alert blocks edits to its workflow's logic, so remove the alert, edit, and re-create it.
+
+1. **Check whether the edit changes the alert's meaning.** A new matcher, threshold source, or
+   flow structure can make the saved alert config wrong, not just stale. Review its name,
+   threshold, and target series against the updated workflow before re-applying it.
+2. **Save the alert config**, noting its `id`, `aggregated_action_id`, and alert type:
+   ```bash
+   bd workflow alert config <WORKFLOW_ID> <CHART_RULE_ID> -o json > alert-backup.json
+   ```
+3. **Delete the alert:**
+   ```bash
+   bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <AGGREGATED_ACTION_ID> \
+     --id <ALERT_ID> --delete
+   ```
+4. **Stop, update, and redeploy the workflow:**
+   ```bash
+   bd workflow stop <WORKFLOW_ID>
+   bd workflow update --workflow-id <WORKFLOW_ID> --workflow-file updated.json
+   bd workflow deploy <WORKFLOW_ID>
+   ```
+5. **Fetch the new aggregated action ID.** The one saved in step 2 is stale (see Pitfalls):
+   ```bash
+   bd workflow describe <WORKFLOW_ID> -o json \
+     --jq '.workflow.actions[] | select(.rule_id == "<CHART_RULE_ID>") | .metric_chart_rule.time_series[].aggregated_id'
+   ```
+6. **Re-create the alert from the saved config**, with the new aggregated action ID and no `id`:
+   ```bash
+   jq '{alert_config: (.alert_configs[] | select(.id == "<ALERT_ID>") | .config)}' \
+     alert-backup.json > recreate.json
+   bd workflow alert upsert <WORKFLOW_ID> <CHART_RULE_ID> <NEW_AGGREGATED_ACTION_ID> \
+     --request-file recreate.json
+   ```
 
 ---
 
@@ -280,9 +317,9 @@ Once you have a workflow ID:
 - **Updating an alert replaces the full config.** Pass `--id` to update an existing alert; omit
   it to create a new one. Either way, all desired field values must be re-specified — omitted
   fields are cleared. Use `--delete` to remove an alert entirely.
-- **Active alerts block workflow logic edits.** A workflow with an active alert cannot have its
-  graph modified. See the full pattern in
-  [workflows.md](./workflows.md#updating-a-workflow-with-active-alerts).
+- **Active alerts block workflow logic edits.** The UI reports "This Workflow has an active alert.
+  Please delete the alert to make changes," and the CLI enforces the same rule. Follow
+  [Editing a Workflow with Active Alerts](#workflow-editing-a-workflow-with-active-alerts).
 - **Aggregated_action_ids change after a workflow update.** The `aggregated_action_id` captured
   before updating a workflow is stale after redeploy — the workflow's series get new IDs.
   Always re-fetch the current IDs with `bd workflow describe` *after* redeploying before

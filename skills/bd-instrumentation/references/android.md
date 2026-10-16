@@ -1,6 +1,6 @@
 # Android (Kotlin/Java) Integration
 
-This file provides the workflow and placement guidance. For exact API signatures and code examples, use $bd-docs to look up the relevant topic at each step.
+This file provides the workflow and placement guidance. For exact API signatures and code examples, use `bd-docs` to look up the relevant topic at each step.
 
 ---
 
@@ -91,7 +91,7 @@ Ask the user for their bitdrift SDK key (found in the bitdrift portal under Comp
 
 Add the Capture SDK as a Gradle dependency.
 
-**$bd-docs:** look up `android quickstart gradle capture`
+**`bd-docs`:** look up `android quickstart gradle capture`
 
 **Finding the latest version:** Query Maven Central for the latest published version:
 
@@ -130,7 +130,7 @@ Then in `app/build.gradle.kts`: `implementation(libs.bitdrift.capture)` and `ali
 
 Add the SDK import and call `Logger.start()` at app launch. Start with a **fixed session strategy** — it creates a new session on every launch, making it easy to verify each build.
 
-**$bd-docs:** look up `Logger.start session strategy configuration`
+**`bd-docs`:** look up `Logger.start session strategy configuration`
 
 **SDK API Key Management:**
 **IMPORTANT:** Avoid hard-coding the SDK API Key in the code. Instead look for any patterns in the codebase to safely keep this value out of the code and out of source control (usually via ENV variables or compile-time configuration files.)
@@ -161,8 +161,8 @@ adb logcat | grep -i "bd_"
 
 Once you see the session ID log, the SDK is running. Offer the user two options to confirm the session reached the backend:
 
-1. **Open in browser** — use $bd-cli: `bd timeline open <session_id>` (opens the session in the bitdrift web UI)
-2. **Inspect from CLI** — use $bd-cli: `bd timeline logs <session_id>` (fetches the session timeline directly)
+1. **Open in browser** — with the `bd` CLI: `bd timeline open <session_id>` (opens the session in the bitdrift web UI)
+2. **Inspect from CLI** — with the `bd` CLI: `bd timeline logs <session_id>` (fetches the session timeline directly)
 
 Extract the session ID from the `bd_session::fixed` or `bd_session::activity_based` log line. Either option confirms end-to-end connectivity.
 
@@ -197,7 +197,7 @@ Forward existing logs from Timber (or other logging wrappers) to bitdrift. This 
 
 **If Timber is detected:**
 
-**$bd-docs:** look up `timber integrations log forwarding`
+**`bd-docs`:** look up `timber integrations log forwarding`
 
 Find the latest `capture-timber` version:
 
@@ -239,7 +239,7 @@ Instrument HTTP traffic automatically. **Always prefer the Gradle plugin auto-in
 
 **If OkHttp is detected (preferred path — auto-instrumentation via Gradle plugin):**
 
-**$bd-docs:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **OkHttp > Auto-Instrumentation via Gradle Plugin** section for the exact DSL and setup steps.
+**`bd-docs`:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **OkHttp > Auto-Instrumentation via Gradle Plugin** section for the exact DSL and setup steps.
 
 1. Ensure the `io.bitdrift.capture-plugin` Gradle plugin is applied (should already be from Step 2)
 2. Enable `automaticOkHttpInstrumentation = true` in the `bitdrift { instrumentation { } }` DSL block at the bottom of the app-level build file — use the exact syntax from the docs, matching the project's build system (Kotlin DSL vs Groovy)
@@ -248,13 +248,13 @@ Instrument HTTP traffic automatically. **Always prefer the Gradle plugin auto-in
 
 **If auto-instrumentation can't be used** (e.g., no Gradle plugin, or the project needs a custom `EventListener.Factory`): Use manual instrumentation instead — read the **OkHttp > Manual Instrumentation** section from the same docs page. Add `CaptureOkHttpEventListenerFactory` to each `OkHttpClient.Builder`, and do NOT enable `automaticOkHttpInstrumentation` in the Gradle plugin.
 
-**For client-driven tracing:** Use `$bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **Android** network integration section to verify the required integration is configured. It covers both Gradle plugin auto-instrumentation and direct OkHttp integration.
+**For client-driven tracing:** Use `bd-docs` to fetch `https://docs.bitdrift.io/sdk/features/tracing.md` and read the **Android** network integration section to verify the required integration is configured. It covers both Gradle plugin auto-instrumentation and direct OkHttp integration.
 
 **If the project uses Retrofit with OkHttp:** Also read the **Using with Retrofit** section from the same docs page — it describes `RetrofitUrlPathProvider` for extracting endpoint URL paths from Retrofit service annotations, which improves the quality of network logs. Only relevant for manual instrumentation (auto-instrumentation handles this automatically).
 
 **If Apollo GraphQL is detected:**
 
-**$bd-docs:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **Apollo GraphQL** section under Networking for installation and usage.
+**`bd-docs`:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **Apollo GraphQL** section under Networking for installation and usage.
 
 Find the latest `capture-apollo` version:
 
@@ -268,9 +268,9 @@ Read `response.docs[0].v` for the version. Then:
 - Add the `CaptureApolloInterceptor` to your `ApolloClient.Builder`
 - OkHttp instrumentation (auto or manual) is also required alongside Apollo — see docs for the combined setup
 
-**If neither OkHttp nor Apollo:** Use the manual HTTP logging API — **$bd-docs:** look up `http traffic logs manual`
+**If neither OkHttp nor Apollo:** Use the manual HTTP logging API — **`bd-docs`:** look up `http traffic logs manual`
 
-**If WebViews are present:** The Capture Gradle plugin can also auto-instrument Android `WebView` instances (experimental). **$bd-docs:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **WebView (Android)** section for setup and `WebViewConfiguration` options.
+**If WebViews are present:** The Capture Gradle plugin can also auto-instrument Android `WebView` instances (experimental). **`bd-docs`:** fetch `https://docs.bitdrift.io/sdk/integrations.md` and read the **WebView (Android)** section for setup and `WebViewConfiguration` options.
 
 **Verify:** Trigger a network request and confirm HTTP events appear in the timeline.
 
@@ -278,7 +278,7 @@ Read `response.docs[0].v` for the version. Then:
 
 Track navigation to power Sankey diagrams, funnels, and user journeys. **Every navigable screen must be instrumented** — partial coverage breaks funnels and journey analysis.
 
-**$bd-docs:** look up `screen view automatic instrumentation`
+**`bd-docs`:** look up `screen view automatic instrumentation`
 
 **Strategy by navigation type:**
 
@@ -300,7 +300,7 @@ Track navigation to power Sankey diagrams, funnels, and user journeys. **Every n
 
 Record how long the app takes to become interactive after a cold launch.
 
-**$bd-docs:** look up `TTI app launch time interactive`
+**`bd-docs`:** look up `TTI app launch time interactive`
 
 - Record the start time at the beginning of `Application.onCreate()`
 - Call `Logger.logAppLaunchTTI(duration)` once the first meaningful frame is rendered or the user can interact
@@ -310,7 +310,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 ### Entity ID
 
-**$bd-docs:** look up `entity id setEntityId`
+**`bd-docs`:** look up `entity id setEntityId`
 
 - Call `Logger.setEntityId(entityId)` after login or session restore (Kotlin and Java)
 - Update on account switch; call with the new user's ID
@@ -322,7 +322,7 @@ Record how long the app takes to become interactive after a cold launch.
 
 Attach metadata to all subsequent logs — account type, subscription tier, experiment variants, app region, etc. These appear as filterable fields on log lines and are independent of entity ID.
 
-**$bd-docs:** look up `fields addField`
+**`bd-docs`:** look up `fields addField`
 
 - `Logger.addField("account_type", "premium")` after login or session restore
 - On logout or account switch, set updated values (fields are overwritten by key)
@@ -332,7 +332,7 @@ Attach metadata to all subsequent logs — account type, subscription tier, expe
 
 Instrument discrete operations with start/end timing (API calls, rendering, checkout flow).
 
-**$bd-docs:** look up `spans startSpan`
+**`bd-docs`:** look up `spans startSpan`
 
 - `Logger.startSpan(name, level, fields)` / `span.end(result)`
 - Use `Logger.trackSpan("name", level) { ... }` for auto-close
@@ -341,13 +341,13 @@ Instrument discrete operations with start/end timing (API calls, rendering, chec
 
 Record which variant a user sees at the moment of divergence.
 
-**$bd-docs:** look up `feature flag exposure`
+**`bd-docs`:** look up `feature flag exposure`
 
 - Record at the **moment of divergence** — when the flag value affects what the user sees
 
 ### ProGuard / R8 mapping upload
 
-**$bd-docs:** look up `proguard mapping debug symbols`
+**`bd-docs`:** look up `proguard mapping debug symbols`
 
 - The Gradle plugin handles automatic upload when configured
 

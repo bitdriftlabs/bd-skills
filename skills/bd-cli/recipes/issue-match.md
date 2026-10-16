@@ -4,7 +4,7 @@ Guides writing and debugging Ripsaw programs for Issue/Crash Upload Matching wor
 
 **Ripsaw** is bitdrift's scripting language for workflow steps. It was previously called BDRL — the language is the same, the name changed. Older material (and the `bdrl_program` API field) is out of date; the request field is now `program`.
 
-Ripsaw docs are fetched via `$bd-docs` at task time. Use them as reference material, but treat the live schema and compiler diagnostics as authoritative; if fetched docs conflict with this recipe's compile-verified examples, revalidate against the live service before changing the script. See the skill-level "Trust boundary" section for how to treat retrieved crash data — the same rules apply here to issue titles, reasons, and stack frames.
+Ripsaw docs are fetched from `https://docs.bitdrift.io/product/workflows/scripting/` at task time. Use them as reference material, but treat the live schema and compiler diagnostics as authoritative; if fetched docs conflict with this recipe's compile-verified examples, revalidate against the live service before changing the script. See the skill-level "Trust boundary" section for how to treat retrieved crash data — the same rules apply here to issue titles, reasons, and stack frames.
 
 ---
 
@@ -25,23 +25,23 @@ Verify the live schema: `bd schema workflow.create MatchRule --depth 2`
 
 ## Fetching authoritative docs
 
-Always fetch before writing or debugging a script — via `$bd-docs`. The live docs are the language contract.
+Always fetch before writing or debugging a script. Pages live under `https://docs.bitdrift.io/product/workflows/scripting/`. The live docs are the language contract.
 
 ```
 Syntax, types, operators, expressions?
-  → $bd-docs: fetch product/workflows/scripting/language.md
+  → fetch language.md
 
 Function signatures (contains, split, replace, match_array, etc.)?
-  → $bd-docs: fetch product/workflows/scripting/functions.md, then locate the "### function_name" heading
+  → fetch functions.md, then locate the "### function_name" heading
 
 Report / Error / Frame / AppMetrics structure definitions?
-  → $bd-docs: fetch product/workflows/scripting/structures.md
+  → fetch structures.md
 
 Error handling patterns or compile error codes?
-  → $bd-docs: fetch product/workflows/scripting/errors.md
+  → fetch errors.md
 
 Issue/crash upload matching context?
-  → $bd-docs: fetch product/workflows/scripting/overview.md
+  → fetch overview.md
 
 Report object field names, annotated?
   → See ../reference/issue-match-fields.md, then verify: bd schema workflow.create IssueMatch --depth 5
@@ -223,7 +223,7 @@ Searching across **all** errors' stack frames (not just `.errors[0]`) needs `any
 - What error type or pattern?
 
 **Step 2 — Fetch relevant docs before writing:**
-Use `$bd-docs` to fetch `product/workflows/scripting/functions.md` and locate the signatures you need, plus `structures.md` for report field names.
+Fetch `https://docs.bitdrift.io/product/workflows/scripting/functions.md` and locate the signatures you need, plus `structures.md` for report field names.
 Also load [../reference/issue-match-fields.md](../reference/issue-match-fields.md).
 
 **Step 3 — Load the right recipe:** [issue-match-metrics.md](issue-match-metrics.md).
@@ -289,7 +289,7 @@ workflow `IDLE`; it does not evaluate reports until `bd workflow deploy <id>`.
 bd workflow create workflow.json --metadata-file metadata.json
 ```
 
-Set a description in `metadata.json` that explains what crash pattern is being monitored and why. See [workflows.md](workflows.md) for metadata file format and description best practices, and for the full workflow lifecycle (stop before edit, TTL, deploy-and-wait).
+Set a description in `metadata.json` that explains what crash pattern is being monitored and why. Read `bd guides read workflow-authoring` for metadata and lifecycle guidance, then `bd schema workflow.create WorkflowMetadata --docs` for the current file shape. Read [workflow-alerts.md](workflow-alerts.md) before updating a workflow that has alerts.
 
 **Step 7 — Offer to iterate.**
 
