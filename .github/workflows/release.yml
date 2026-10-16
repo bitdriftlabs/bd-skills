@@ -1,6 +1,9 @@
 name: release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       version:
@@ -11,43 +14,50 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Validate release version
-        run: |
-          version="${{ inputs.version }}"
-
-          case "$version" in
-            v*)
-              echo "Version input must not start with 'v'. Use values like 1.2.3, not v1.2.3." >&2
-              exit 1
-              ;;
-          esac
-
-          semver_re='^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'
-          if ! [[ "$version" =~ $semver_re ]]; then
-            echo "Version input must be a semantic version like 1.2.3 or 1.2.3-rc.1." >&2
-            exit 1
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Require main branch
-        run: |
-          test "${GITHUB_REF_NAME}" = "main"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
+      - name: Resolve release version
+        id: version
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+        run: |
+          version="$(python3 -c 'import json; print(json.load(open("plugins/bitdrift-cli/plugin.json", encoding="utf-8"))["version"])')"
+
+          if [[ -n "$REQUESTED_VERSION" && "$REQUESTED_VERSION" != "$version" ]]; then
+            echo "Requested version $REQUESTED_VERSION does not match manifest version $version." >&2
+            exit 1
+          fi
+
+          python3 scripts/release_versions.py "$version" --check
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+          if git show-ref --verify --quiet "refs/tags/v$version"; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "Tag v$version already exists; skipping release."
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install latest GitHub CLI
+        if: steps.version.outputs.publish == 'true'
         run: |
           type -p curl >/dev/null || sudo apt-get update
           type -p curl >/dev/null || sudo apt-get install -y curl
@@ -60,12 +70,12 @@ jobs:
           sudo apt-get install -y gh
           gh --version
 
-      - name: Verify release version manifests
-        run: |
-          python3 scripts/release_versions.py "${{ inputs.version }}" --check
-
       - name: Publish skills release
+        if: steps.version.outputs.publish == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
         run: |
-          gh skill publish --tag "v${{ inputs.version }}"
+          gh skill publish --dry-run
+          gh repo edit "$GITHUB_REPOSITORY" --add-topic agent-skills || true
+          gh release create "v$RELEASE_VERSION" --target "$GITHUB_SHA" --generate-notes
