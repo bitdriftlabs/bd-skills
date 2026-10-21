@@ -14,7 +14,7 @@ Fetch product and API documentation only from `https://docs.bitdrift.io`; the CL
 
 ## Setup
 
-Install the CLI using the [CLI installation instructions](https://github.com/bitdriftlabs/bd-cli-releases/blob/main/README.md). Offer to handle installation. Guide routing requires `bd` 0.2.35 or newer; check `bd --version` when a guide is missing. New users can sign up at https://bitdrift.io/signup.
+Install the CLI using the [CLI installation instructions](https://github.com/bitdriftlabs/bd-cli-releases/blob/main/README.md). Offer to handle installation. Guide routing requires `bd` 0.2.43 or newer; check `bd --version` when a guide is missing. New users can sign up at https://bitdrift.io/signup.
 
 Critical User Journey monitoring is covered by the `bd-cuj` skill. Conceptual docs and SDK integration are covered by the `bd-docs` and `bd-instrumentation` skills, if available; they ship separately (the `bitdrift-sdk` plugin, or `npx skills add bitdriftlabs/bd-skills -s <name>`), so suggest installing them through whichever channel the user installed this skill with.
 
@@ -41,6 +41,13 @@ For guide-backed tasks, discover the installed catalog with `bd guides list`, th
 | Discover and manage device commands | `device-commands` |
 | Look up session-level fields | `session-investigation` |
 | Discover WebView event fields | `workflow-authoring`; `session-investigation` to verify observed logs |
+| Find Instant Insights | `workflow-discovery` |
+| Set chart titles, series labels, or y-axis units | `chart-authoring` |
+| Create or manage dashboards | `chart-authoring` |
+| Create or manage workflow alerts | `workflow-alerts` |
+| Create or manage issue alerts | `issue-alerts` |
+| Retrieve or decode Session Replay wireframes | `session-investigation` |
+| Write or debug a Ripsaw script for an IssueMatch step | `issue-match-scripting` |
 
 For hosted MCP, use the same guide catalog through MCP resources when available. Scope resource discovery to the registered Bitdrift server; use the returned `bitdrift-guide://` URIs. If resources are unavailable, use `bd.list_guides` and `bd.read_guides`. Hosted MCP selects its own instructions; do not use CLI-rendered guides for it.
 
@@ -50,19 +57,9 @@ Read these only when the task needs their detail beyond a bundled guide.
 
 | Intent | File | What's in it |
 |---|---|---|
-| Find Instant Insights | `bd guides read workflow-discovery` | Discover current prebuilt workflows by tag and inspect their charts |
-| Look up a user, browse known entities, or queue an offline capture | `bd guides read entity-investigation` | Entity lookup, bookmarks, and next-online recording; use CLI help for notification-group commands |
-| Create or manage dashboards | [recipes/dashboards.md](recipes/dashboards.md) | Dashboard lifecycle, composition guidance, and when to use dashboards vs more workflows |
-| Discover WebView event fields | `bd guides read workflow-authoring` | Inspect `GenericOotbConditionType.WEBVIEW_*` with `bd schema workflow.create`; use `session-investigation` to verify observed logs |
-| Retrieve or decode Session Replay wireframes | [reference/session-replay.md](reference/session-replay.md) | Detailed CLI replay decoding and frame output |
-| Set chart titles, series labels, or y-axis units | `bd guides read chart-authoring` | Live metadata schema, units, and update behavior |
-| Create or manage workflow alerts | [recipes/workflow-alerts.md](recipes/workflow-alerts.md) | Basic and SLO alerts on charts; multi-tier patterns; UI limitations; required values checklist |
-| Create or manage issue alerts | [recipes/issue-alerts.md](recipes/issue-alerts.md) | Condition-based and notification alerts on crash/error issue groups |
 | Create or manage saved views | `bd view --help` | Saved issue-group and workflow filters; pass a view ID to `bd issue group list --view-id`, `bd workflow list --view-id`, or `bd issue alert upsert` |
 | Manage teams or resource sharing | [recipes/teams-access-control.md](recipes/teams-access-control.md) | Team membership and consistent access control for workflows, views, and dashboards |
 | Manage API keys, SDK keys, connectors | [recipes/admin.md](recipes/admin.md) | Key creation, permissions, connector setup |
-| Write or debug a Ripsaw script for an IssueMatch step | [recipes/issue-match.md](recipes/issue-match.md) | Ripsaw scripting (formerly BDRL), compiler rules, crash metrics, issue field reference |
-| Start from a working Ripsaw script | [recipes/issue-match-examples.md](recipes/issue-match-examples.md) | 10 compiled and deployed IssueMatch programs |
 
 ## CLI output and links
 

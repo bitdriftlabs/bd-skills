@@ -1,6 +1,6 @@
 # Phase 4: Alerts
 
-> For full alert CLI syntax, flag reference, and pitfalls, see the workflow-alerts recipe in `bd-cli`.
+> For alert design and pitfalls, run `bd guides read workflow-alerts`; for flags, see `bd workflow alert upsert --help`.
 
 Two alerts to create:
 

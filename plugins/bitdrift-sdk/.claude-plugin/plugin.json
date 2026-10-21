@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "bitdrift-sdk",
   "displayName": "bitdrift SDK",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Instrument iOS, Android, and React Native apps with the bitdrift Capture SDK, and look up bitdrift documentation.",
   "author": {
     "name": "bitdrift",
