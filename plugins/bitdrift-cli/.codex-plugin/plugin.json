@@ -1,6 +1,6 @@
 {
   "name": "bitdrift-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Operate the bitdrift Capture platform with the bd CLI: investigate crashes, sessions, and app health, author workflows and dashboards, and set up Critical User Journey monitoring.",
   "author": {
     "name": "bitdrift",

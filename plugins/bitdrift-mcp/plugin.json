@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "bitdrift-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Connect to bitdrift through its hosted MCP server. Sign in to bitdrift when connecting.",
   "author": {
     "name": "bitdrift",
